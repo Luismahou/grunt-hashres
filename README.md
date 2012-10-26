@@ -1,6 +1,6 @@
 # grunt-hashres
 
-Hashes your js and css files and rename the <script> and <link> declarations that refer to them in your html/php/etc files.
+Hashes your js and css files and rename the &lt;script> and &lt;link> declarations that refer to them in your html/php/etc files.
 
 ## Getting Started
 Install this grunt plugin next to your project's [grunt.js gruntfile][getting_started] with: `npm install grunt-hashres`
