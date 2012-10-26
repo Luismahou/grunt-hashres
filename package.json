@@ -2,21 +2,21 @@
   "name": "grunt-hashres",
   "description": "Hashes your js and css files and rename the <script> and <link> declarations that refer to them in your html/php/etc files.",
   "version": "0.1.0",
-  "homepage": "https://github.com/luismahou/grunt-hashres",
+  "homepage": "https://github.com/Luismahou/grunt-hashres",
   "author": {
     "name": "Luismahou"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/luismahou/grunt-hashres.git"
+    "url": "git://github.com/Luismahou/grunt-hashres.git"
   },
   "bugs": {
-    "url": "https://github.com/luismahou/grunt-hashres/issues"
+    "url": "https://github.com/Luismahou/grunt-hashres/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/luismahou/grunt-hashres/blob/master/LICENSE-MIT"
+      "url": "https://github.com/Luismahou/grunt-hashres/blob/master/LICENSE-MIT"
     }
   ],
   "main": "grunt.js",
