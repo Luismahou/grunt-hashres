@@ -31,7 +31,7 @@ hashres: {
 }
 ```
 The way this task works follows my workflow: I only hash the .js and .css files of my production release files, which are first both uglified and minified.
-If you want to hash a different set of files for a different environment, simply add another subtask unders ```hashres```.
+If you want to hash a different set of files for a different environment, simply add another subtask under ```hashres```.
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [grunt][grunt].
