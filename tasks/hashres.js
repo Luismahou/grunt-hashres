@@ -17,18 +17,21 @@ module.exports = function(grunt) {
       'hashres',
       'Hashes your resources and updates the files that refer to them',
       function() {
-    // Required properties: 'files' and 'dest'
+    // Required properties: 'files' and 'out'
     this.requiresConfig(this.name + '.' + this.target + '.files');
-    this.requiresConfig(this.name + '.' + this.target + '.dest');
-    grunt.helper('hashAndSub', this.data.files, this.data.dest, this.data.encoding);
+    this.requiresConfig(this.name + '.' + this.target + '.out');
+    grunt.helper('hashAndSub', this.data.files, this.data.out, this.data.encoding);
   });
-  grunt.registerHelper('hashAndSub', function(files, dest, encoding) {
+  grunt.registerHelper('hashAndSub', function(files, out, encoding) {
+    grunt.log.ok('out: ' + out);
     var nameToHashedName = {};
     encoding = (encoding || 'utf8');
     grunt.log.debug('Using encoding ' + encoding);
 
     // Converting the file to an array if is only one
     files = Array.isArray(files) ? files : [files];
+    out = Array.isArray(out) ? out : [out];
+
     // Renaming the files using a unique name
     grunt.file.expand(files).forEach(function(f) {
       var md5 = grunt.helper('md5', f),
@@ -50,13 +53,15 @@ module.exports = function(grunt) {
     });
 
     // Substituting references to the given files with the hashed ones.
-    var destContents = fs.readFileSync(dest, encoding);
-    for (var name in nameToHashedName) {
-      grunt.log.debug('Substituting ' + name + ' by ' + nameToHashedName[name]);
-      destContents = destContents.replace(name, nameToHashedName[name]);
-    }
-    grunt.log.debug('Saving the updated contents of the destination file');
-    fs.writeFileSync(dest, destContents, encoding);
+    grunt.file.expand(out).forEach(function(f) {
+      var outContents = fs.readFileSync(f, encoding);
+      for (var name in nameToHashedName) {
+        grunt.log.debug('Substituting ' + name + ' by ' + nameToHashedName[name]);
+        outContents = outContents.replace(name, nameToHashedName[name]);
+      }
+      grunt.log.debug('Saving the updated contents of the outination file');
+      fs.writeFileSync(f, outContents, encoding);
+    });
   });
   // **md5** helper is a basic wrapper around crypto.createHash, with
   // given `algorithm` and `encoding`. Both are optional and defaults to
