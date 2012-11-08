@@ -25,10 +25,11 @@
     "node": "*"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "vows --spec"
   },
   "devDependencies": {
-    "grunt": "~0.3.16"
+    "grunt": "~0.3.16",
+    "vows": "~0.6.4"
   },
   "keywords": [
     "gruntplugin"

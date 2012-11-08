@@ -1,4 +1,4 @@
-var grunt = require('grunt');
+// var grunt = require('grunt');
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -20,15 +20,15 @@ var grunt = require('grunt');
     test.ifError(value)
 */
 
-exports['hashres'] = {
-  setUp: function(done) {
-    // setup here
-    done();
-  },
-  'helper': function(test) {
-    test.expect(1);
-    // tests here
-    test.equal(grunt.helper('hashres'), 'hashres!!!', 'should return the correct value.');
-    test.done();
-  }
-};
+// exports['hashres'] = {
+//   setUp: function(done) {
+//     // setup here
+//     done();
+//   },
+//   'helper': function(test) {
+//     test.expect(1);
+//     // tests here
+//     // test.equal(grunt.helper('hashres'), 'hashres!!!', 'should return the correct value.');
+//     test.done();
+//   }
+// };
