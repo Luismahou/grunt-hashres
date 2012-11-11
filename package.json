@@ -33,5 +33,8 @@
   },
   "keywords": [
     "gruntplugin"
-  ]
+  ],
+  "dependencies": {
+    "wrench": "~1.4.2"
+  }
 }
