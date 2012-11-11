@@ -25,7 +25,7 @@
     "node": "*"
   },
   "scripts": {
-    "test": "vows --spec"
+    "test": "node ./node_modules/vows/bin/vows --spec"
   },
   "devDependencies": {
     "grunt": "~0.3.16",

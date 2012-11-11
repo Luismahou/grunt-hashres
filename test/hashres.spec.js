@@ -1,5 +1,6 @@
-var vows = require('vows'),
-    assert = require('assert');
+var vows   = require('vows'),
+    assert = require('assert'),
+    grunt  = require('grunt');
 
 vows.describe('hashres').addBatch({
   'hashes resources': {

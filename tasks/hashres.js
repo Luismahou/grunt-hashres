@@ -11,7 +11,8 @@ module.exports = function(grunt) {
   // Loading necessary modules
   var fs = require('fs'),
       path = require('path'),
-      crypto = require('crypto');
+      crypto = require('crypto'),
+      utils = require('./hashresUtils');
 
   grunt.registerMultiTask(
       'hashres',
@@ -20,13 +21,21 @@ module.exports = function(grunt) {
     // Required properties: 'files' and 'out'
     this.requiresConfig(this.name + '.' + this.target + '.files');
     this.requiresConfig(this.name + '.' + this.target + '.out');
-    grunt.helper('hashAndSub', this.data.files, this.data.out, this.data.encoding);
+    grunt.helper(
+      'hashAndSub',
+      this.data.files, this.data.out, this.data.encoding, this.data.fileNameFormat);
   });
-  grunt.registerHelper('hashAndSub', function(files, out, encoding) {
+  grunt.registerHelper(
+      'hashAndSub', function(files, out, encoding, fileNameFormat) {
     grunt.log.ok('out: ' + out);
     var nameToHashedName = {};
     encoding = (encoding || 'utf8');
     grunt.log.debug('Using encoding ' + encoding);
+
+    fileNameFormat = (fileNameFormat || '${hash}.${name}.cache.${ext}');
+    grunt.log.debug('Using fileNameFormat ' + fileNameFormat);
+
+    var formatter = utils.compile(fileNameFormat);
 
     // Converting the file to an array if is only one
     files = Array.isArray(files) ? files : [files];
@@ -37,12 +46,10 @@ module.exports = function(grunt) {
       var md5 = grunt.helper('md5', f),
           fileName = path.basename(f),
           lastIndex = fileName.lastIndexOf('.'),
-          renamed = [
-            md5.slice(0, 8), // Starging the file with the hash that would make it unique
-            fileName.slice(0, lastIndex), // Real name of the file
-            'cache', // Good to have to ease apache configuration to enable 'perfect caching'
-            fileName.slice(lastIndex + 1, fileName.length) // Extension of the file
-          ].join('.');
+          renamed = formatter({
+            hash: md5,
+            name: fileName.slice(0, lastIndex),
+            ext: fileName.slice(lastIndex + 1, fileName.length) });
 
       // Mapping the original name with hashed one for later use.
       nameToHashedName[fileName] = renamed;
