@@ -1,3 +1,11 @@
+/*
+ * grunt-hashres
+ * https://github.com/luismahou/grunt-hashres
+ *
+ * Copyright (c) 2012 Luismahou
+ * Licensed under the MIT license.
+ */
+
 var crypto = require('crypto'),
     fs     = require('fs');
 
