@@ -12,7 +12,7 @@ module.exports = function(grunt) {
   var fs     = require('fs'),
       path   = require('path'),
       crypto = require('crypto'),
-      helper = require('./hashresHelper'),
+      helper = require('./hashresHelper');
 
   grunt.registerMultiTask(
       'hashres',
