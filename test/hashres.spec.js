@@ -26,7 +26,7 @@ vows.describe('hashres').addBatch({
           files: ['./temp/simple/myscripts.js'],
           out: './temp/simple/index.html'
         });
-      assert(fs.existsSync('./temp/simple/5a7a5b61.myscripts.cache.js'));
+      assert(path.existsSync('./temp/simple/5a7a5b61.myscripts.cache.js'));
       var html = fs.readFileSync('./temp/simple/index.html', 'utf8');
       assert(html.indexOf('5a7a5b61.myscripts.cache.js') !== -1);
     }
