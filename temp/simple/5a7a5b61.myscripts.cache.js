@@ -1,3 +1,0 @@
-(function() {
-  // Nothing to do
-})
