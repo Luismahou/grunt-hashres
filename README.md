@@ -59,7 +59,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 Add unit tests for any new or changed functionality. Lint and test your code using [grunt][grunt].
 
 ## Release History
-* 14/11/12 - 0.1.4: Feature request [#1](https://github.com/Luismahou/grunt-hashres/issues/1): ```fileNameFormat``` property added.
+* 14/11/12 - 0.1.5: Feature request [#1](https://github.com/Luismahou/grunt-hashres/issues/1): ```fileNameFormat``` property added.
 * 02/11/12 - 0.1.3: First working release.
 
 ## License
