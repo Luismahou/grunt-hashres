@@ -16,6 +16,7 @@ grunt.loadNpmTasks('grunt-hashres');
 
 ## Documentation
 Add the following to your ```grunt.js``` file, inside the ```initConfig``` function:
+
 ```js
 hashres: {
   // hashres is a multitask. Here 'prod' is the name of the subtask. You can have as many as you want.
@@ -35,6 +36,7 @@ hashres: {
   }
 }
 ```
+
 The way this task works follows my workflow: I only hash the .js and .css files of my production release files, 
 which are first both uglified and minified.
 If you want to hash a different set of files for a different environment, 
