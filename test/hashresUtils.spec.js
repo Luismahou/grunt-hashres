@@ -17,7 +17,7 @@ vows.describe('Hashres Utils').addBatch({
       topic: function(utils) {
         return utils.compileFormat('${hash}.${ext}'); },
       'that renames to hash.js': function(formatter) {
-        assert.equal('123.js', formatter({ hash: '123', ext: 'js'}));
+        assert.equal('123.js', formatter({ hash: '123', ext: 'js' }));
       },
       'that renames to hash.png': function(formatter) {
         assert.equal('456.png', formatter({ hash: '456', ext: 'png' }));
@@ -29,7 +29,12 @@ vows.describe('Hashres Utils').addBatch({
       'that renames to hash.name.cache.js': function(formatter) {
         assert.equal(
           '123.all-scripts.cache.js',
-          formatter({ hash: '123', name: 'all-scripts', ext: 'js'}));
+          formatter({ hash: '123', name: 'all-scripts', ext: 'js' }));
+      },
+      'that renames file with multiple dots': function(formatter) {
+        assert.equal(
+          '123.file.with.many.dots.cache.js',
+          formatter({ hash: '123', name: 'file.with.many.dots', ext: 'js' }));
       }
     },
     '${hash}.${hash}.${ext}': {
@@ -38,7 +43,7 @@ vows.describe('Hashres Utils').addBatch({
       'that renames to hash.hash.js': function(formatter) {
         assert.equal(
           '123.123.js',
-          formatter({ hash: '123', ext: 'js'}));
+          formatter({ hash: '123', ext: 'js' }));
       }
     }
   },
