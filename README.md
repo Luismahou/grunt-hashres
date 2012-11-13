@@ -7,7 +7,7 @@ Install this grunt plugin next to your project's [grunt.js gruntfile][getting_st
 
 Then add this line to your project's `grunt.js` gruntfile:
 
-```javascript
+```js
 grunt.loadNpmTasks('grunt-hashres');
 ```
 
@@ -16,7 +16,7 @@ grunt.loadNpmTasks('grunt-hashres');
 
 ## Documentation
 Add the following to your ```grunt.js``` file, inside the ```initConfig``` function:
-```javascript
+```js
 hashres: {
   // hashres is a multitask. Here 'prod' is the name of the subtask. You can have as many as you want.
   prod: {
@@ -57,7 +57,8 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 Add unit tests for any new or changed functionality. Lint and test your code using [grunt][grunt].
 
 ## Release History
-* 0.1.3: First working release.
+* 14/11/12 - 0.1.4: Feature request [#1](https://github.com/Luismahou/grunt-hashres/issues/1): ```fileNameFormat``` property added.
+* 02/11/12 - 0.1.3: First working release.
 
 ## License
 Copyright (c) 2012 Luismahou  
