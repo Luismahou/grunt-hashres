@@ -32,7 +32,7 @@
     "vows": "~0.6.4"
   },
   "keywords": [
-    "gruntplugin"
+    "gruntplugin", "grunt", "revision", "rev", "hash"
   ],
   "dependencies": {
     "wrench": "~1.4.2"
