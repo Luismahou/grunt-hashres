@@ -49,8 +49,8 @@ exports.hashAndSub = function(grunt, options) { //files, out, encoding, fileName
     // Renaming the file
     if(renameFiles) {
       fs.renameSync(f, path.resolve(path.dirname(f), renamed));
-      grunt.log.write(f + ' ').ok(renamed);
     }
+    grunt.log.write(f + ' ').ok(renamed);
   });
 
   // Substituting references to the given files with the hashed ones.
