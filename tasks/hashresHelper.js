@@ -24,8 +24,8 @@ exports.hashAndSub = function(grunt, options) { //files, out, encoding, fileName
   grunt.log.debug('Using encoding ' + encoding);
   fileNameFormat = (fileNameFormat || '${hash}.${name}.cache.${ext}');
   grunt.log.debug('Using fileNameFormat ' + fileNameFormat);
-  renameFiles = renameFile === undefined? true : false;
-  grunt.log.debug(renameFile? 'Renaming files' : 'Not renaming files');
+  renameFiles = renameFiles === undefined? true : false;
+  grunt.log.debug(renameFiles? 'Renaming files' : 'Not renaming files');
 
   formatter = utils.compileFormat(fileNameFormat);
 
