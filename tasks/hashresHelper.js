@@ -15,6 +15,7 @@ exports.hashAndSub = function(grunt, options) { //files, out, encoding, fileName
       out              = options.out,
       encoding         = options.encoding,
       fileNameFormat   = options.fileNameFormat,
+      renameFiles      = options.renameFiles,
       nameToHashedName = {},
       formatter        = null;
 
@@ -23,6 +24,8 @@ exports.hashAndSub = function(grunt, options) { //files, out, encoding, fileName
   grunt.log.debug('Using encoding ' + encoding);
   fileNameFormat = (fileNameFormat || '${hash}.${name}.cache.${ext}');
   grunt.log.debug('Using fileNameFormat ' + fileNameFormat);
+  renameFiles = renameFile === undefined? true : false;
+  grunt.log.debug(renameFile? 'Renaming files' : 'Not renaming files');
 
   formatter = utils.compileFormat(fileNameFormat);
 
@@ -44,8 +47,10 @@ exports.hashAndSub = function(grunt, options) { //files, out, encoding, fileName
     nameToHashedName[fileName] = renamed;
 
     // Renaming the file
-    fs.renameSync(f, path.resolve(path.dirname(f), renamed));
-    grunt.log.write(f + ' ').ok(renamed);
+    if(renameFiles) {
+      fs.renameSync(f, path.resolve(path.dirname(f), renamed));
+      grunt.log.write(f + ' ').ok(renamed);
+    }
   });
 
   // Substituting references to the given files with the hashed ones.
