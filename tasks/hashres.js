@@ -25,7 +25,8 @@ module.exports = function(grunt) {
       files         : this.data.files,
       out           : this.data.out,
       encoding      : this.data.encoding,
-      fileNameFormat: this.data.fileNameFormat
+      fileNameFormat: this.data.fileNameFormat,
+      renameFiles   : this.data.renameFiles
     });
   });
 };
