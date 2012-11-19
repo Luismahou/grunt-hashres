@@ -32,7 +32,10 @@ hashres: {
     encoding: 'utf8',
     // Optional. Format used to name the files specified in 'files' property. 
     // Default value: '${hash}.${name}.cache.${ext}'
-    fileNameFormat: '${hash}.${name}.cache.${ext}'
+    fileNameFormat: '${hash}.${name}.cache.${ext}',
+    // Optional. Should files be renamed or only alter the references to the files
+    // Default value: true
+    renameFiles: true
   }
 }
 ```
@@ -53,12 +56,14 @@ according to the pattern specified in this property. The following variables are
   * ```${hash}```: the first 8 digits of the md5 of the file.
   * ```${name}```: the original name of the file.
   * ```${ext}```: the original extension of the file.
+* ```renameFiles```: Rename the files or leave them in place and only alter the references to them in ```out```. Defaults to ```true```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. 
 Add unit tests for any new or changed functionality. Lint and test your code using [grunt][grunt].
 
 ## Release History
+* 19/11/12 - 0.2.1: Optional File Renaming
 * 14/11/12 - 0.1.5: Feature request [#1](https://github.com/Luismahou/grunt-hashres/issues/1): ```fileNameFormat``` property added.
 * 02/11/12 - 0.1.3: First working release.
 
