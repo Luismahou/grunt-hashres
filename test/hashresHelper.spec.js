@@ -16,9 +16,10 @@ var vows   = require('vows'),
     wrench = require('wrench');
 
 // Setting up the files for the tests
+grunt.file.mkdir('./temp/helper/');
 wrench.copyDirSyncRecursive('./test/fixtures/', './temp/helper/', { preserve: false });
 
-vows.describe('hashres').addBatch({
+vows.describe('hashresHelper').addBatch({
   'hashes resources': {
     topic: grunt,
     'for simple sample': function(grunt) {

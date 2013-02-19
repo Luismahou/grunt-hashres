@@ -16,6 +16,7 @@ var vows         = require('vows'),
     wrench       = require('wrench');
 
 // Setting up the files for the tests
+grunt.file.mkdir('./temp/hashres/');
 wrench.copyDirSyncRecursive('./test/fixtures/', './temp/hashres/', { preserve: false });
 
 var runCommand = function(command, options, callback) {
