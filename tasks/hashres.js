@@ -2,31 +2,36 @@
  * grunt-hashres
  * https://github.com/luismahou/grunt-hashres
  *
- * Copyright (c) 2012 Luismahou
+ * Copyright (c) 2013 luismahou
  * Licensed under the MIT license.
  */
 
+'use strict';
+
 module.exports = function(grunt) {
 
-  // Loading necessary modules
-  var fs     = require('fs'),
-      path   = require('path'),
-      crypto = require('crypto'),
-      helper = require('./hashresHelper');
+  var helper = require('./hashresHelper');
 
-  grunt.registerMultiTask(
-      'hashres',
-      'Hashes your resources and updates the files that refer to them',
-      function() {
-    // Required properties: 'files' and 'out'
-    this.requiresConfig(this.name + '.' + this.target + '.files');
-    this.requiresConfig(this.name + '.' + this.target + '.out');
+  grunt.registerMultiTask('hashres', 'Your task description goes here.', function() {
+
+    // Merging options with defaults
+    var options = this.options({
+      fileNameFormat: '${hash}.${name}.cache.${ext}',
+      encoding      : 'utf8',
+      renameFiles   : true
+    });
+
+    // Required properties: 'src' and 'dest'
+    this.requiresConfig(this.name + '.' + this.target + '.src');
+    this.requiresConfig(this.name + '.' + this.target + '.dest');
     helper.hashAndSub(grunt, {
-      files         : this.data.files,
-      out           : this.data.out,
-      encoding      : this.data.encoding,
-      fileNameFormat: this.data.fileNameFormat,
-      renameFiles   : this.data.renameFiles
+      files: this.files,
+      src           : options.src,
+      dest          : options.dest,
+      encoding      : options.encoding,
+      fileNameFormat: options.fileNameFormat,
+      renameFiles   : options.renameFiles
     });
   });
+
 };

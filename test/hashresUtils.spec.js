@@ -6,6 +6,8 @@
  * Licensed under the MIT license.
  */
 
+'use strict';
+
 var vows = require('vows'),
     assert = require('assert'),
     utils = require('../tasks/hashresUtils');

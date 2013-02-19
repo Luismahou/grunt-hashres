@@ -6,6 +6,8 @@
  * Licensed under the MIT license.
  */
 
+'use strict';
+
 var crypto = require('crypto'),
     fs     = require('fs');
 

@@ -1,34 +1,37 @@
 {
   "name": "grunt-hashres",
   "description": "Hashes your js and css files and rename the <script> and <link> declarations that refer to them in your html/php/etc files.",
-  "version": "0.2.1",
-  "homepage": "https://github.com/Luismahou/grunt-hashres",
+  "version": "0.3.0",
+  "homepage": "https://github.com/luismahou/grunt-hashres",
   "author": {
-    "name": "Luismahou"
+    "name": "luismahou"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Luismahou/grunt-hashres.git"
+    "url": "git://github.com/luismahou/grunt-hashres.git"
   },
   "bugs": {
-    "url": "https://github.com/Luismahou/grunt-hashres/issues"
+    "url": "https://github.com/luismahou/grunt-hashres/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/Luismahou/grunt-hashres/blob/master/LICENSE-MIT"
+      "url": "https://github.com/luismahou/grunt-hashres/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "grunt.js",
-  "bin": "bin/grunt-hashres",
+  "main": "Gruntfile.js",
   "engines": {
-    "node": "*"
+    "node": ">= 0.8.0"
   },
   "scripts": {
     "test": "node ./node_modules/vows/bin/vows --spec"
   },
   "devDependencies": {
-    "grunt": "~0.3.16",
+    "grunt-contrib-jshint": "0.1.1rc6",
+    "grunt-contrib-clean": "0.4.0rc6",
+    "grunt-contrib-nodeunit": "0.1.2rc6",
+    "grunt": "0.4.0rc6",
+    "grunt-vows": "0.3.1",
     "vows": "~0.6.4"
   },
   "keywords": [

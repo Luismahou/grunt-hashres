@@ -1,72 +1,95 @@
 # grunt-hashres
 
-Hashes your js and css files and rename the ```<script>``` and ```<link>``` declarations that refer to them in your html/php/etc files.
+> )
 
 ## Getting Started
-Install this grunt plugin next to your project's [grunt.js gruntfile][getting_started] with: `npm install grunt-hashres`
+_If you haven't used [grunt][] before, be sure to check out the [Getting Started][] guide._
 
-Then add this line to your project's `grunt.js` gruntfile:
+From the same directory as your project's [Gruntfile][Getting Started] and [package.json][], install this plugin with the following command:
+
+```bash
+npm install grunt-hashres --save-dev
+```
+
+Once that's done, add this line to your project's Gruntfile:
 
 ```js
 grunt.loadNpmTasks('grunt-hashres');
 ```
 
-[grunt]: http://gruntjs.com/
-[getting_started]: https://github.com/gruntjs/grunt/blob/master/docs/getting_started.md
+If the plugin has been installed correctly, running `grunt --help` at the command line should list the newly-installed plugin's task or tasks. In addition, the plugin should be listed in package.json as a `devDependency`, which ensures that it will be installed whenever the `npm install` command is run.
 
-## Documentation
-Add the following to your ```grunt.js``` file, inside the ```initConfig``` function:
+[grunt]: http://gruntjs.com/
+[Getting Started]: https://github.com/gruntjs/grunt/blob/devel/docs/getting_started.md
+[package.json]: https://npmjs.org/doc/json.html
+
+## The "hashres" task
+
+### Overview
+In your project's Gruntfile, add a section named `hashres` to the data object passed into `grunt.initConfig()`.
 
 ```js
-hashres: {
-  // hashres is a multitask. Here 'prod' is the name of the subtask. You can have as many as you want.
-  prod: {
-    // Files to hash
-    files: [
-      // WARNING: These files will be renamed!
-      'dist/prod/scripts/my-compressed-and-minified-scripts.js',
-      'dist/prod/styles/my-compressed-and-minified-styles.css'],
-    // File that refers to above files and needs to be updated with the hashed name
-    out: 'dist/prod/home.php',
-    // Optional. Encoding used to read/write files. Default value 'utf8'
-    encoding: 'utf8',
-    // Optional. Format used to name the files specified in 'files' property. 
-    // Default value: '${hash}.${name}.cache.${ext}'
-    fileNameFormat: '${hash}.${name}.cache.${ext}',
-    // Optional. Should files be renamed or only alter the references to the files
-    // Default value: true
-    renameFiles: true
-  }
-}
+grunt.initConfig({
+  hashres: {
+    options: {
+      // Task-specific options go here.
+    },
+    your_target: {
+      // Target-specific file lists and/or options go here.
+    },
+  },
+})
 ```
 
-The way this task works follows my workflow: I only hash the .js and .css files of my production release files, 
-which are first both uglified and minified.
-If you want to hash a different set of files for a different environment, 
-simply add another subtask under ```hashres```.
+### Options
 
-### Properties
-* ```files```: A single file expression or an array of file expressions. 
-Something like ```myscripts/*.js``` would be valid.
-* ```out```: The file expression(s) that refer to the hashed files and that will be updated with the new names. 
-You can update more than one file specifying an array of output files: ```[out/fileOne.html, out/fileTwo.html]```
-* ```encoding```: Encoding used to read and write files. Using ```utf8``` by default.
-* ```fileNameFormat```: The files specified in property ```files``` will be renamed 
-according to the pattern specified in this property. The following variables are allowed:
-  * ```${hash}```: the first 8 digits of the md5 of the file.
-  * ```${name}```: the original name of the file.
-  * ```${ext}```: the original extension of the file.
-* ```renameFiles```: Rename the files or leave them in place and only alter the references to them in ```out```. Defaults to ```true```
+#### options.separator
+Type: `String`
+Default value: `',  '`
+
+A string value that is used to do something with whatever.
+
+#### options.punctuation
+Type: `String`
+Default value: `'.'`
+
+A string value that is used to do something else with whatever else.
+
+### Usage Examples
+
+#### Default Options
+In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+
+```js
+grunt.initConfig({
+  hashres: {
+    options: {},
+    files: {
+      'dest/default_options': ['src/testing', 'src/123'],
+    },
+  },
+})
+```
+
+#### Custom Options
+In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+
+```js
+grunt.initConfig({
+  hashres: {
+    options: {
+      separator: ': ',
+      punctuation: ' !!!',
+    },
+    files: {
+      'dest/default_options': ['src/testing', 'src/123'],
+    },
+  },
+})
+```
 
 ## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. 
-Add unit tests for any new or changed functionality. Lint and test your code using [grunt][grunt].
+In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [grunt][].
 
 ## Release History
-* 19/11/12 - 0.2.1: Optional File Renaming, thanks to [raphaeleidus](https://github.com/raphaeleidus).
-* 14/11/12 - 0.1.5: Feature request [#1](https://github.com/Luismahou/grunt-hashres/issues/1): ```fileNameFormat``` property added.
-* 02/11/12 - 0.1.3: First working release.
-
-## License
-Copyright (c) 2012 Luismahou  
-Licensed under the MIT license.
+_(Nothing yet)_
