@@ -1,4 +1,4 @@
-## This guide is for users of version 2.1 compatible with Grunt 0.3.x.
+## This guide is for users of version 0.2.1 compatible with Grunt 0.3.x.
 ## Have you upgraded to Grunt 0.4? Then go to [main documentation](https://github.com/Luismahou/grunt-hashres/)
 
 # grunt-hashres
@@ -6,13 +6,16 @@
 Hashes your js and css files and rename the ```<script>``` and ```<link>``` declarations that refer to them in your html/php/etc files.
 
 ## Getting Started
-Install this grunt plugin next to your project's [grunt.js gruntfile][getting_started] with: `npm install grunt-hashres`
+Install this grunt plugin next to your project's [grunt.js gruntfile][getting_started] with: `npm install grunt-hashres@0.2.1`
 
 Then add this line to your project's `grunt.js` gruntfile:
 
 ```js
 grunt.loadNpmTasks('grunt-hashres');
 ```
+
+### Heads up
+The latest stable version compatible with Grunt 0.3.x is 0.2.1.
 
 [grunt]: http://gruntjs.com/
 [getting_started]: https://github.com/gruntjs/grunt/blob/master/docs/getting_started.md
