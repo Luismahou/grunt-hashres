@@ -1,3 +1,5 @@
+# Upgrade to Grunt 0.4 almost done. Documentation in progress
+
 # grunt-hashres
 
 > )
