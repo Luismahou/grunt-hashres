@@ -55,7 +55,7 @@ which are first both uglified and minified.
 If you want to hash a different set of files for a different environment,
 simply add another subtask under ```hashres```.
 
-#### Heads up:
+### Heads up:
 If you have upgraded from Grunt 0.3 version: 'files' and 'out' config properties have been replaced by 'src' and 'dest'
 
 ### Properties
@@ -76,7 +76,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 Add unit tests for any new or changed functionality. Lint and test your code using [grunt][grunt].
 
 ## Release History
-* 20/02/13 - 0.3.0: Update to Grunt 0.4. Check out the documentation because some configuration properties have changed.
+* 20/02/13 - 0.3.0: Update to Grunt 0.4. **Check out the documentation because some configuration properties have changed.**
 * 19/11/12 - 0.2.1: Optional File Renaming, thanks to [raphaeleidus](https://github.com/raphaeleidus).
 * 14/11/12 - 0.1.5: Feature request [#1](https://github.com/Luismahou/grunt-hashres/issues/1): ```fileNameFormat``` property added.
 * 02/11/12 - 0.1.3: First working release.
