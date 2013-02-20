@@ -44,7 +44,7 @@ vows.describe('hashres').addBatch({
   'with custom options': {
     topic: function() {
       runCommand(
-        'grunt hashres:withCustomOptions',
+        '../../../../node_modules/grunt-cli/bin/./grunt hashres:withCustomOptions',
         { cwd: pathWithCustomOptions },
         this.callback);
     },
@@ -61,7 +61,7 @@ vows.describe('hashres').addBatch({
   'with default options': {
     topic: function() {
       runCommand(
-        'grunt hashres:withDefaultOptions',
+        '../../../../node_modules/grunt-cli/bin/./grunt hashres:withDefaultOptions',
         { cwd: pathWithDefaultOptions },
         this.callback);
     },
