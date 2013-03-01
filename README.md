@@ -71,6 +71,9 @@ according to the pattern specified in this property. The following variables are
   * ```${ext}```: the original extension of the file.
 * ```renameFiles```: Rename the files or leave them in place and only alter the references to them in ```out```. Defaults to ```true```
 
+### Status
+[![Build Status](https://api.travis-ci.org/Luismahou/grunt-hashres.png)](https://travis-ci.org/Luismahou/grunt-hashres)
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 Add unit tests for any new or changed functionality. Lint and test your code using [grunt][grunt].
