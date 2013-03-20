@@ -38,7 +38,7 @@ hashres: {
     // Specific options, override the global ones
     options: {
       // You can override encoding, fileNameFormat or renameFiles
-    }
+    },
     // Files to hash
     src: [
       // WARNING: These files will be renamed!
