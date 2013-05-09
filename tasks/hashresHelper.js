@@ -55,7 +55,7 @@ exports.hashAndSub = function(grunt, options) {
         var destContents = fs.readFileSync(f, encoding);
         for (var name in nameToHashedName) {
           grunt.log.debug('Substituting ' + name + ' by ' + nameToHashedName[name]);
-          destContents = destContents.replace(name, nameToHashedName[name]);
+          destContents = destContents.replace(new RegExp(name, "g"), nameToHashedName[name]);
         }
         grunt.log.debug('Saving the updated contents of the outination file');
         fs.writeFileSync(f, destContents, encoding);
