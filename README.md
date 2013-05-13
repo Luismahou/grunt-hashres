@@ -79,8 +79,9 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 Add unit tests for any new or changed functionality. Lint and test your code using [grunt][grunt].
 
 ## Release History
+* 14/05/13 - 0.3.2: Bugfix [#3](https://github.com/Luismahou/grunt-hashres/pull/8): Replace all ocurrences. Thanks to [kleinsch](https://github.com/kleinsch).
 * 20/02/13 - 0.3.0: Update to Grunt 0.4. **Check out the documentation because some configuration properties have changed.**
-* 19/11/12 - 0.2.1: Optional File Renaming, thanks to [raphaeleidus](https://github.com/raphaeleidus).
+* 19/11/12 - 0.2.1: Optional File Renaming. Thanks to [raphaeleidus](https://github.com/raphaeleidus).
 * 14/11/12 - 0.1.5: Feature request [#1](https://github.com/Luismahou/grunt-hashres/issues/1): ```fileNameFormat``` property added.
 * 02/11/12 - 0.1.3: First working release.
 
