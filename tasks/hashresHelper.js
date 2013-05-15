@@ -51,15 +51,17 @@ exports.hashAndSub = function(grunt, options) {
       });
 
       // Substituting references to the given files with the hashed ones.
-      grunt.file.expand(f.dest).forEach(function(f) {
-        var destContents = fs.readFileSync(f, encoding);
-        for (var name in nameToHashedName) {
-          grunt.log.debug('Substituting ' + name + ' by ' + nameToHashedName[name]);
-          destContents = destContents.replace(new RegExp(name, "g"), nameToHashedName[name]);
-        }
-        grunt.log.debug('Saving the updated contents of the outination file');
-        fs.writeFileSync(f, destContents, encoding);
-      });
+      if (f.dest) {
+        grunt.file.expand(f.dest).forEach(function(f) {
+          var destContents = fs.readFileSync(f, encoding);
+          for (var name in nameToHashedName) {
+            grunt.log.debug('Substituting ' + name + ' by ' + nameToHashedName[name]);
+            destContents = destContents.replace(new RegExp(name, "g"), nameToHashedName[name]);
+          }
+          grunt.log.debug('Saving the updated contents of the outination file');
+          fs.writeFileSync(f, destContents, encoding);
+        });
+      }
     });
   }
 };

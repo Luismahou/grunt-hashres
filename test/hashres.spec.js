@@ -37,8 +37,9 @@ var runCommand = function(command, options, callback) {
   });
 };
 
-var pathWithCustomOptions  = './temp/hashres/options/with-custom-options';
-var pathWithDefaultOptions = './temp/hashres/options/with-default-options';
+var pathWithCustomOptions  = 'temp/hashres/options/with-custom-options';
+var pathWithDefaultOptions = 'temp/hashres/options/with-default-options';
+var pathWithSkipDestOptions = 'temp/hashres/options/with-skip-dest-options';
 
 vows.describe('hashres').addBatch({
   'with custom options': {
@@ -76,6 +77,19 @@ vows.describe('hashres').addBatch({
       var html2 = grunt.file.read(pathWithDefaultOptions + '/index2.html');
       assert(html2.indexOf('scripts/5a7a5b61.js') !== -1);
       assert(html2.indexOf('styles/3b97b071.css') !== -1);
+    }
+  },
+  'without dest': {
+    topic: function() {
+      runCommand(
+        'node ../../../../node_modules/grunt-cli/bin/grunt hashres:withSkipDestOptions',
+        { cwd: pathWithSkipDestOptions },
+        this.callback);
+    },
+    'hashes resources': function() {
+      // Files have been renamed
+      assert(grunt.file.exists(pathWithSkipDestOptions + '/5a7a5b61.js'));
+      assert(grunt.file.exists(pathWithSkipDestOptions + '/3b97b071.css'));
     }
   }
 }).export(module);
