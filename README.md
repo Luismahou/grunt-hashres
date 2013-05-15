@@ -44,6 +44,7 @@ hashres: {
       // WARNING: These files will be renamed!
       'dist/prod/scripts/my-compressed-and-minified-scripts.js',
       'dist/prod/styles/my-compressed-and-minified-styles.css'],
+    // Optional.
     // File that refers to above files and needs to be updated with the hashed name
     dest: 'dist/prod/home.php',
   }
