@@ -37,14 +37,14 @@ var runCommand = function(command, options, callback) {
   });
 };
 
-var pathWithCustomOptions  = 'temp/hashres/options/with-custom-options';
-var pathWithDefaultOptions = 'temp/hashres/options/with-default-options';
+var pathWithCustomOptions  = './temp/hashres/options/with-custom-options';
+var pathWithDefaultOptions = './temp/hashres/options/with-default-options';
 
 vows.describe('hashres').addBatch({
   'with custom options': {
     topic: function() {
       runCommand(
-        '../../../../node_modules/grunt-cli/bin/./grunt hashres:withCustomOptions',
+        'node ../../../../node_modules/grunt-cli/bin/grunt hashres:withCustomOptions',
         { cwd: pathWithCustomOptions },
         this.callback);
     },
@@ -61,7 +61,7 @@ vows.describe('hashres').addBatch({
   'with default options': {
     topic: function() {
       runCommand(
-        '../../../../node_modules/grunt-cli/bin/./grunt hashres:withDefaultOptions',
+        'node ../../../../node_modules/grunt-cli/bin/grunt hashres:withDefaultOptions',
         { cwd: pathWithDefaultOptions },
         this.callback);
     },
