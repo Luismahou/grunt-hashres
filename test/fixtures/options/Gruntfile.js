@@ -13,7 +13,8 @@ module.exports = function(grunt) {
   grunt.initConfig({
     hashres: {
       options: {
-        fileNameFormat: '${hash}.${ext}'
+        fileNameFormat: '${hash}.${ext}',
+        hashSize: 8
       },
       withCustomOptions: {
         options: {
@@ -25,6 +26,9 @@ module.exports = function(grunt) {
       withDefaultOptions: {
         src : ['with-default-options/**/*.js', 'with-default-options/**/*.css'],
         dest: ['with-default-options/*.html']
+      },
+      withSkipDestOptions: {
+        src : ['with-skip-dest-options/**/*.js', 'with-skip-dest-options/**/*.css']
       }
     }
   });

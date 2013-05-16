@@ -25,9 +25,15 @@ hashres: {
   options: {
     // Optional. Encoding used to read/write files. Default value 'utf8'
     encoding: 'utf8',
+    // Optional. Algorithm used for cachine. Could be any that crypto.createHash() function supports.
+    // Default value: 'md5'
+    algorithm: 'sha1',
     // Optional. Format used to name the files specified in 'files' property.
     // Default value: '${hash}.${name}.cache.${ext}'
     fileNameFormat: '${hash}.${name}.cache.${ext}',
+    // Optional. Number of first hash symbols to take.
+    // Default. Full hash is taken,
+    hashSize: 8,
     // Optional. Should files be renamed or only alter the references to the files
     // Use it with '${name}.${ext}?${hash} to get perfect caching without renaming your files
     // Default value: true
@@ -44,6 +50,7 @@ hashres: {
       // WARNING: These files will be renamed!
       'dist/prod/scripts/my-compressed-and-minified-scripts.js',
       'dist/prod/styles/my-compressed-and-minified-styles.css'],
+    // Optional.
     // File that refers to above files and needs to be updated with the hashed name
     dest: 'dist/prod/home.php',
   }

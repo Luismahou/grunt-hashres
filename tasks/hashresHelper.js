@@ -17,6 +17,8 @@ exports.hashAndSub = function(grunt, options) {
   var src              = options.src,
       dest             = options.dest,
       encoding         = options.encoding,
+      algorithm        = options.algorithm,
+      hashSize         = options.hashSize,
       fileNameFormat   = options.fileNameFormat,
       renameFiles      = options.renameFiles,
       nameToHashedName = {},
@@ -32,11 +34,13 @@ exports.hashAndSub = function(grunt, options) {
   if (options.files) {
     options.files.forEach(function(f) {
       f.src.forEach(function(src) {
-        var md5       = utils.md5(src).slice(0, 8),
+        var
+            hash      = utils.hash(src, algorithm, encoding),
+            size      = hashSize || hash.length,
             fileName  = path.basename(src),
             lastIndex = fileName.lastIndexOf('.'),
             renamed   = formatter({
-              hash: md5,
+              hash: hash.slice(0, size),
               name: fileName.slice(0, lastIndex),
               ext : fileName.slice(lastIndex + 1, fileName.length) });
 
@@ -51,15 +55,26 @@ exports.hashAndSub = function(grunt, options) {
       });
 
       // Substituting references to the given files with the hashed ones.
-      grunt.file.expand(f.dest).forEach(function(f) {
-        var destContents = fs.readFileSync(f, encoding);
-        for (var name in nameToHashedName) {
-          grunt.log.debug('Substituting ' + name + ' by ' + nameToHashedName[name]);
-          destContents = destContents.replace(new RegExp(name, "g"), nameToHashedName[name]);
+      if (f.dest) {
+        var dest, out;
+
+        if (typeof f.dest === 'object' && !Array.isArray(f.dest)) {
+          dest = f.dest.src;
+          out = f.dest.out;
+        } else {
+          dest = f.dest;
         }
-        grunt.log.debug('Saving the updated contents of the outination file');
-        fs.writeFileSync(f, destContents, encoding);
-      });
+
+        grunt.file.expand(dest).forEach(function(f) {
+          var destContents = fs.readFileSync(f, encoding);
+          for (var name in nameToHashedName) {
+            grunt.log.debug('Substituting ' + name + ' by ' + nameToHashedName[name]);
+            destContents = destContents.replace(new RegExp(name, "g"), nameToHashedName[name]);
+          }
+          grunt.log.debug('Saving the updated contents of the outination file');
+          fs.writeFileSync(out || f, destContents, encoding);
+        });
+      }
     });
   }
 };

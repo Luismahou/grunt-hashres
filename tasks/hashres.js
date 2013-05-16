@@ -18,16 +18,18 @@ module.exports = function(grunt) {
     var options = this.options({
       fileNameFormat: '${hash}.${name}.cache.${ext}',
       encoding      : 'utf8',
+      algorithm: 'md5',
       renameFiles   : true
     });
 
     // Required properties: 'src' and 'dest'
     this.requiresConfig(this.name + '.' + this.target + '.src');
-    this.requiresConfig(this.name + '.' + this.target + '.dest');
     helper.hashAndSub(grunt, {
       files: this.files,
       src           : options.src,
       dest          : options.dest,
+      algorithm     : options.algorithm,
+      hashSize      : options.hashSize,
       encoding      : options.encoding,
       fileNameFormat: options.fileNameFormat,
       renameFiles   : options.renameFiles
