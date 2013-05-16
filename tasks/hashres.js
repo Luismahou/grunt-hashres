@@ -18,6 +18,7 @@ module.exports = function(grunt) {
     var options = this.options({
       fileNameFormat: '${hash}.${name}.cache.${ext}',
       encoding      : 'utf8',
+      algorithm: 'md5',
       renameFiles   : true
     });
 
@@ -27,6 +28,8 @@ module.exports = function(grunt) {
       files: this.files,
       src           : options.src,
       dest          : options.dest,
+      algorithm     : options.algorithm,
+      size          : options.size,
       encoding      : options.encoding,
       fileNameFormat: options.fileNameFormat,
       renameFiles   : options.renameFiles

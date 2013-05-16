@@ -22,9 +22,9 @@ exports.compileFormat = function(format) {
   };
 };
 
-// Generates the md5 for the given file
-exports.md5 = function(filepath) {
-  var hash = crypto.createHash('md5');
-  hash.update(fs.readFileSync(String(filepath), 'utf8'));
+// Generates the hash for the given file
+exports.hash = function(filepath, algorithm, encoding) {
+  var hash = crypto.createHash(algorithm);
+  hash.update(fs.readFileSync(String(filepath), encoding));
   return hash.digest('hex');
 };
