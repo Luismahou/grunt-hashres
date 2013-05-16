@@ -29,7 +29,7 @@ module.exports = function(grunt) {
       src           : options.src,
       dest          : options.dest,
       algorithm     : options.algorithm,
-      size          : options.size,
+      hashSize      : options.hashSize,
       encoding      : options.encoding,
       fileNameFormat: options.fileNameFormat,
       renameFiles   : options.renameFiles

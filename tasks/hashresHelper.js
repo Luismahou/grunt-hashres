@@ -18,7 +18,7 @@ exports.hashAndSub = function(grunt, options) {
       dest             = options.dest,
       encoding         = options.encoding,
       algorithm        = options.algorithm,
-      size             = options.size,
+      hashSize         = options.hashSize,
       fileNameFormat   = options.fileNameFormat,
       renameFiles      = options.renameFiles,
       nameToHashedName = {},
@@ -36,7 +36,7 @@ exports.hashAndSub = function(grunt, options) {
       f.src.forEach(function(src) {
         var
             hash      = utils.hash(src, algorithm, encoding),
-            size      = options.size || hash.length,
+            size      = hashSize || hash.length,
             fileName  = path.basename(src),
             lastIndex = fileName.lastIndexOf('.'),
             renamed   = formatter({

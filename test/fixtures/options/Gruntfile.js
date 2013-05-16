@@ -14,7 +14,7 @@ module.exports = function(grunt) {
     hashres: {
       options: {
         fileNameFormat: '${hash}.${ext}',
-        size: 8
+        hashSize: 8
       },
       withCustomOptions: {
         options: {

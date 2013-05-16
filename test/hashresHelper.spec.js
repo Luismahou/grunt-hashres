@@ -32,7 +32,7 @@ vows.describe('hashresHelper').addBatch({
           fileNameFormat: '${hash}.${name}.cache.${ext}',
           encoding      : 'utf8',
           algorithm: 'md5',
-          size: 8,
+          hashSize: 8,
           renameFiles   : true
         });
       assert(fs.existsSync('./temp/helper/simple/5a7a5b61.myscripts.cache.js'));
@@ -52,7 +52,7 @@ vows.describe('hashresHelper').addBatch({
           fileNameFormat: '${hash}-${name}.${ext}',
           encoding      : 'utf8',
           algorithm: 'md5',
-          size: 8,
+          hashSize: 8,
           renameFiles   : true
         });
       assert(fs.existsSync('./temp/helper/subfolders/scripts/5a7a5b61-myscripts1.js'));
