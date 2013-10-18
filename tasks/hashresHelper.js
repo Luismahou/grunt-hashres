@@ -19,6 +19,8 @@ exports.hashAndSub = function(grunt, options) {
       encoding         = options.encoding,
       fileNameFormat   = options.fileNameFormat,
       renameFiles      = options.renameFiles,
+      patternMaker     = options.patternMaker,
+      replacementMaker = options.replacementMaker,
       nameToHashedName = {},
       formatter        = null;
 
@@ -41,8 +43,13 @@ exports.hashAndSub = function(grunt, options) {
               ext : fileName.slice(lastIndex + 1, fileName.length) });
 
         // Mapping the original name with hashed one for later use.
-        nameToHashedName[fileName] = renamed;
+        nameToHashedName[fileName] = {
+            renamed: renamed,
+            pattern: patternMaker(fileName, renamed, src),
+            replacement: replacementMaker(fileName, renamed, src)
+        };
 
+        // grunt.log.write(nameToHashedName[fileName].pattern + ' ').ok(nameToHashedName[fileName].replacement);
         // Renaming the file
         if (renameFiles) {
           fs.renameSync(src, path.resolve(path.dirname(src), renamed));
@@ -54,8 +61,8 @@ exports.hashAndSub = function(grunt, options) {
       grunt.file.expand(f.dest).forEach(function(f) {
         var destContents = fs.readFileSync(f, encoding);
         for (var name in nameToHashedName) {
-          grunt.log.debug('Substituting ' + name + ' by ' + nameToHashedName[name]);
-          destContents = destContents.replace(new RegExp(name, "g"), nameToHashedName[name]);
+          grunt.log.debug('Substituting ' + name + ' by ' + nameToHashedName[name].renamed);
+          destContents = destContents.split(nameToHashedName[name].pattern).join(nameToHashedName[name].replacement);
         }
         grunt.log.debug('Saving the updated contents of the outination file');
         fs.writeFileSync(f, destContents, encoding);
