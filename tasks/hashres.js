@@ -10,36 +10,36 @@
 
 module.exports = function(grunt) {
 
-    var helper = require('./hashresHelper');
+  var helper = require('./hashresHelper');
 
-    grunt.registerMultiTask('hashres', 'Your task description goes here.', function() {
+  grunt.registerMultiTask('hashres', 'Your task description goes here.', function() {
 
-        // Merging options with defaults
-        var options = this.options({
-            fileNameFormat: '${hash}.${name}.cache.${ext}',
-            encoding      : 'utf8',
-            renameFiles   : true,
-            patternMaker  : function (source, renamed) {
-                return source;
-            },
-            replacementMaker: function (source, renamed) {
-                return renamed;
-            }
-        });
-
-        // Required properties: 'src' and 'dest'
-        this.requiresConfig(this.name + '.' + this.target + '.src');
-        this.requiresConfig(this.name + '.' + this.target + '.dest');
-        helper.hashAndSub(grunt, {
-            files: this.files,
-            src           : options.src,
-            dest          : options.dest,
-            encoding      : options.encoding,
-            fileNameFormat: options.fileNameFormat,
-            renameFiles   : options.renameFiles,
-            patternMaker  : options.patternMaker,
-            replacementMaker  : options.replacementMaker
-        });
+    // Merging options with defaults
+    var options = this.options({
+      fileNameFormat: '${hash}.${name}.cache.${ext}',
+      encoding      : 'utf8',
+      renameFiles   : true,
+      patternMaker  : function (source, renamed) {
+        return source;
+      },
+      replacementMaker: function (source, renamed) {
+        return renamed;
+      }
     });
+
+    // Required properties: 'src' and 'dest'
+    this.requiresConfig(this.name + '.' + this.target + '.src');
+    this.requiresConfig(this.name + '.' + this.target + '.dest');
+    helper.hashAndSub(grunt, {
+      files: this.files,
+      src           : options.src,
+      dest          : options.dest,
+      encoding      : options.encoding,
+      fileNameFormat: options.fileNameFormat,
+      renameFiles   : options.renameFiles,
+      patternMaker  : options.patternMaker,
+      replacementMaker  : options.replacementMaker
+    });
+  });
 
 };
