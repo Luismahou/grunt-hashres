@@ -18,7 +18,13 @@ module.exports = function(grunt) {
     var options = this.options({
       fileNameFormat: '${hash}.${name}.cache.${ext}',
       encoding      : 'utf8',
-      renameFiles   : true
+      renameFiles   : true,
+      patternMaker  : function (source, renamed) {
+        return source;
+      },
+      replacementMaker: function (source, renamed) {
+        return renamed;
+      }
     });
 
     // Required properties: 'src' and 'dest'
@@ -30,7 +36,9 @@ module.exports = function(grunt) {
       dest          : options.dest,
       encoding      : options.encoding,
       fileNameFormat: options.fileNameFormat,
-      renameFiles   : options.renameFiles
+      renameFiles   : options.renameFiles,
+      patternMaker  : options.patternMaker,
+      replacementMaker  : options.replacementMaker
     });
   });
 

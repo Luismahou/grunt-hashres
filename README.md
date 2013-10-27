@@ -31,7 +31,21 @@ hashres: {
     // Optional. Should files be renamed or only alter the references to the files
     // Use it with '${name}.${ext}?${hash} to get perfect caching without renaming your files
     // Default value: true
-    renameFiles: true
+    renameFiles: true,
+    // Optional. For user to customize what to find, useful when you have cssmin or uglify task before hashres
+    // For example, I use 'src/core/admin.css' in template file, and have minified version in 'dist/core/admin.min.css', and a hash-reved version in 'dist/core/admin.min.xxxxxxxx.css'
+    // I want to replace all occurence of 'src/core/admin.css' with 'dist/core/admin.min.xxxxxxxx.css', but the default behavior just replace 'dist/core/admin.min.css'
+    // params:
+    //  - souce: dist/core/admin.min.css
+    //  - renamed: dist/core/admin.min.xxxxxxxx.css
+    //  - src: dist/core/admin.min.xxxxxxxx.css
+    patternMaker: function (source, renamed, src) {
+      return source;
+    },
+    // Optional. For user to customize replacement, used as companion with patternMaker
+    replacementMaker: function (source, renamed, src) {
+      return renamed;
+    },
   },
   // hashres is a multitask. Here 'prod' is the name of the subtask. You can have as many as you want.
   prod: {
