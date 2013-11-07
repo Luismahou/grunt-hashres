@@ -74,5 +74,5 @@ Add unit tests for any new or changed functionality. Lint and test your code usi
 * 02/11/12 - 0.1.3: First working release.
 
 ## License
-Copyright (c) 2012 Luismahou
+Copyright (c) 2013 Luismahou
 Licensed under the MIT license.
