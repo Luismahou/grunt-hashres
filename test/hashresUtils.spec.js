@@ -2,7 +2,7 @@
  * grunt-hashres
  * https://github.com/luismahou/grunt-hashres
  *
- * Copyright (c) 2012 Luismahou
+ * Copyright (c) 2013 Luismahou
  * Licensed under the MIT license.
  */
 
