@@ -88,11 +88,11 @@ vows.describe('hashres').addBatch({
     },
     'hashes resources': function() {
       // Files have been renamed
-      assert(grunt.file.exists(pathWithSpecialCharacters + '/scripts/*3$3.js'));
+      assert(grunt.file.exists(pathWithSpecialCharacters + '/scripts/+3$3.js'));
       assert(grunt.file.exists(pathWithSpecialCharacters + '/styles/+1.css'));
       // index.html has been updated
       var html = grunt.file.read(pathWithSpecialCharacters + '/index.html');
-      assert(html.indexOf('scripts/*3$3.js?5a7a5b61') !== -1);
+      assert(html.indexOf('scripts/+3$3.js?5a7a5b61') !== -1);
       assert(html.indexOf('styles/+1.css?3b97b071') !== -1);
     }
   }
