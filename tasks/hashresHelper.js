@@ -65,11 +65,19 @@ exports.hashAndSub = function(grunt, options) {
         }
         grunt.log.write(src + ' ').ok(renamed);
       });
+      // sorting nameToHashedName keys by length desc
+      var sortedNames = Object.keys(nameToHashedName);
 
+      sortedNames.sort(function (a, b) {
+        return b.length - a.length;
+      });
+      
+      
       // Substituting references to the given files with the hashed ones.
       grunt.file.expand(f.dest).forEach(function(f) {
         var destContents = fs.readFileSync(f, encoding);
-        for (var name in nameToHashedName) {
+        for (var key in sortedNames) {
+          var name = sortedNames[key];
           grunt.log.debug('Substituting ' + name + ' by ' + nameToHashedName[name]);
           destContents = destContents.replace(new RegExp(preg_quote(name), "g"), nameToHashedName[name]);
         }
