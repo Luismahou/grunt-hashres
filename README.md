@@ -90,3 +90,7 @@ Add unit tests for any new or changed functionality. Lint and test your code usi
 ## License
 Copyright (c) 2013 Luismahou
 Licensed under the MIT license.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Luismahou/grunt-hashres/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
