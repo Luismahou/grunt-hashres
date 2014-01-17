@@ -30,9 +30,8 @@ function preg_quote (str, delimiter) {
 }
 
 exports.hashAndSub = function(grunt, options) {
-
+  //We open the cache file, and then JSON decode it.
   var fileCache = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'filecache.json')));
-  grunt.log.writeln(fileCache);
   
   var src              = options.src,
       dest             = options.dest,
@@ -62,9 +61,6 @@ exports.hashAndSub = function(grunt, options) {
 
         // Mapping the original name with hashed one for later use.
         nameToHashedName[fileName] = renamed;
-        /*if (!fileCache[fileName]) {
-          fileCache[fileName] = renamed;
-        }*/
 
         // Renaming the file
         if (renameFiles) {
@@ -79,9 +75,11 @@ exports.hashAndSub = function(grunt, options) {
         for (var name in nameToHashedName) {
           grunt.log.debug('Substituting ' + name + ' by ' + nameToHashedName[name]);
           if (fileCache[name]) {
-            grunt.log.debug('File was already cached');
+            //If the file was already hashed, and it has a wierd name like style.df23d23.css, then replace that name instead of the original name.
+            grunt.log.debug('File was already hashed');
             destContents = destContents.replace(new RegExp(preg_quote(fileCache[name]), "g"), nameToHashedName[name]);
           } else {
+            //If the file has not been hashed before
             grunt.log.debug('File is new');
             destContents = destContents.replace(new RegExp(preg_quote(name), "g"), nameToHashedName[name]);
           }
@@ -91,7 +89,7 @@ exports.hashAndSub = function(grunt, options) {
         fs.writeFileSync(f, destContents, encoding);
       });
     });
-
+    //Save the cache file with the new mappings
     fs.writeFileSync(path.resolve(__dirname, 'filecache.json'), JSON.stringify(fileCache));
   }
 };
