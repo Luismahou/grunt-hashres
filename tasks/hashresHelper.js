@@ -12,7 +12,6 @@ var fs    = require('fs'),
     path  = require('path'),
     utils = require('./hashresUtils');
 
-
 function preg_quote (str, delimiter) {
   // http://kevin.vanzonneveld.net
   // +   original by: booeyOH
