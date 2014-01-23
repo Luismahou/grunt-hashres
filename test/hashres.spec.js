@@ -40,6 +40,7 @@ var runCommand = function(command, options, callback) {
 var pathWithCustomOptions     = 'temp/hashres/options/with-custom-options';
 var pathWithDefaultOptions    = 'temp/hashres/options/with-default-options';
 var pathWithSpecialCharacters = 'temp/hashres/options/with-special-characters';
+var pathOverridingHashedFiles = 'temp/hashres/overriding';
 
 vows.describe('hashres').addBatch({
   'with custom options': {
@@ -94,6 +95,22 @@ vows.describe('hashres').addBatch({
       var html = grunt.file.read(pathWithSpecialCharacters + '/index.html');
       assert(html.indexOf('scripts/+3$3.js?5a7a5b61') !== -1);
       assert(html.indexOf('styles/+1.css?3b97b071') !== -1);
+    }
+  },
+  'overriding hashed files': {
+    topic: function() {
+      runCommand(
+        '../../../node_modules/grunt-cli/bin/./grunt hashres:firstVersion hashres:secondVersion',
+        { cwd: pathOverridingHashedFiles },
+        this.callback);
+    },
+    'hashes resources overriding references in second hashres execution': function() {
+      // Both files have been renamed
+      assert(grunt.file.exists(pathOverridingHashedFiles + '/js-v1/688d441c.script.cache.js'));
+      assert(grunt.file.exists(pathOverridingHashedFiles + '/js-v2/cab5c571.script.cache.js'));
+      // index.html has been updated with the second version
+      var html = grunt.file.read(pathOverridingHashedFiles + '/index.html');
+      assert(html.indexOf('js/cab5c571.script.cache.js') !== -1);
     }
   }
 }).export(module);
