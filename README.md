@@ -56,7 +56,7 @@ hashres: {
 ```grunt-hashres```, as a general rule, should be run when you're going to release your code. Ideally, you should create a ```stage``` folder where you'll copy your ```html```, minified ```js``` and ```css``` and all your resources. And then, on this clean copy, hash the resource names.
 
 ### Alternative workflow
-Due to popular demand, the task support to update references that where already hashed. This means, that you won't need to create a stage folder before running ```grunt-hashres```. See #26 and #27 for more info.
+Due to popular demand, the task support to update references that where already hashed. This means, that you won't need to create a stage folder before running ```grunt-hashres```. See [#26] and [#27] for more info.
 
 ### Heads up
 If you have upgraded from Grunt 0.3 version: 'files' and 'out' config properties have been replaced by 'src' and 'dest'
@@ -79,7 +79,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 Add unit tests for any new or changed functionality. Lint and test your code using [grunt][grunt].
 
 ## Release History
-* 24/01/14 - 0.4.0: Due to popular demand (see #26, #29, and more) ```grunt-hashres``` now support to run multiple times the hashing without creating a clean copy of the files to hash. Thanks to [jrduncans](https://github.com/jrduncans) and [DaWyz](https://github.com/DaWyz) for their effort.
+* 24/01/14 - 0.4.0: Due to popular demand (see [#26], [#29], and more) ```grunt-hashres``` now support to run multiple times the hashing without creating a clean copy of the files to hash. Thanks to [jrduncans](https://github.com/jrduncans) and [DaWyz](https://github.com/DaWyz) for their effort.
 * 17/11/14 - 0.3.4: Bugfix [#18](https://github.com/Luismahou/grunt-hashres/pull/18): Fixed special character test that doesn't work on windows.
 * 07/11/13 - 0.3.3: Bugfix [#16](https://github.com/Luismahou/grunt-hashres/pull/16): Renaming files with special characters. Thanks to [crodas](https://github.com/crodas).
 * 14/05/13 - 0.3.2: Bugfix [#8](https://github.com/Luismahou/grunt-hashres/pull/8): Replace all ocurrences. Thanks to [kleinsch](https://github.com/kleinsch).
