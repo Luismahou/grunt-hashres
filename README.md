@@ -1,6 +1,8 @@
-## grunt-hashres has been updated to Grunt 0.4. if you're still using Grunt 0.3.x go to [old version documentation](https://github.com/Luismahou/grunt-hashres/blob/master/README-grunt-0.3.md)
+#### grunt-hashres has been updated to Grunt 0.4. if you're still using Grunt 0.3.x go to [old version documentation](https://github.com/Luismahou/grunt-hashres/blob/master/grunt-0.3-README.md)
 
 # grunt-hashres
+
+[![Build Status](https://api.travis-ci.org/Luismahou/grunt-hashres.png)](https://travis-ci.org/Luismahou/grunt-hashres)
 
 Hashes your js and css files and rename the ```<script>``` and ```<link>``` declarations that refer to them in your html/php/etc files.
 
@@ -50,12 +52,13 @@ hashres: {
 }
 ```
 
-The way this task works follows my workflow: I only hash the .js and .css files of my production release files,
-which are first both uglified and minified.
-If you want to hash a different set of files for a different environment,
-simply add another subtask under ```hashres```.
+### Recommended workflow
+```grunt-hashres```, as a general rule, should be run when you're going to release your code. Ideally, you should create a ```stage``` folder where you'll copy your ```html```, minified ```js``` and ```css``` and all your resources. And then, on this clean copy, hash the resource names.
 
-### Heads up:
+### Alternative workflow
+Due to popular demand, the task support to update references that where already hashed. This means, that you won't need to create a stage folder before running ```grunt-hashres```. See [#26](https://github.com/Luismahou/grunt-hashres/issues/26) and [#29](https://github.com/Luismahou/grunt-hashres/issues/29) for more info.
+
+### Heads up
 If you have upgraded from Grunt 0.3 version: 'files' and 'out' config properties have been replaced by 'src' and 'dest'
 
 ### Properties
@@ -71,14 +74,14 @@ according to the pattern specified in this property. The following variables are
   * ```${ext}```: the original extension of the file.
 * ```renameFiles```: Rename the files or leave them in place and only alter the references to them in ```out```. Defaults to ```true```
 
-## Status
-[![Build Status](https://api.travis-ci.org/Luismahou/grunt-hashres.png)](https://travis-ci.org/Luismahou/grunt-hashres)
-
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 Add unit tests for any new or changed functionality. Lint and test your code using [grunt][grunt].
 
 ## Release History
+* 24/01/14 - 0.4.0: Due to popular demand (see [#26](https://github.com/Luismahou/grunt-hashres/issues/26), [#29](https://github.com/Luismahou/grunt-hashres/issues/29), and more) ```grunt-hashres``` now support to run multiple times the hashing without creating a clean copy of the files to hash. Thanks to [jrduncans](https://github.com/jrduncans) and [ajaybc](https://github.com/ajaybc) for their effort.
+* 17/11/14 - 0.3.4: Bugfix [#18](https://github.com/Luismahou/grunt-hashres/pull/18): Fixed special character test that doesn't work on windows.
+* 07/11/13 - 0.3.3: Bugfix [#16](https://github.com/Luismahou/grunt-hashres/pull/16): Renaming files with special characters. Thanks to [crodas](https://github.com/crodas).
 * 14/05/13 - 0.3.2: Bugfix [#8](https://github.com/Luismahou/grunt-hashres/pull/8): Replace all ocurrences. Thanks to [kleinsch](https://github.com/kleinsch).
 * 20/02/13 - 0.3.0: Update to Grunt 0.4. **Check out the documentation because some configuration properties have changed.**
 * 19/11/12 - 0.2.1: Optional File Renaming. Thanks to [raphaeleidus](https://github.com/raphaeleidus).
@@ -86,5 +89,5 @@ Add unit tests for any new or changed functionality. Lint and test your code usi
 * 02/11/12 - 0.1.3: First working release.
 
 ## License
-Copyright (c) 2012 Luismahou
+Copyright (c) 2013 Luismahou
 Licensed under the MIT license.

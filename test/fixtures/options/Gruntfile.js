@@ -25,6 +25,14 @@ module.exports = function(grunt) {
       withDefaultOptions: {
         src : ['with-default-options/**/*.js', 'with-default-options/**/*.css'],
         dest: ['with-default-options/*.html']
+      },
+      withSpecialCharacters: {
+        options: {
+          fileNameFormat: '${name}.${ext}?${hash}',
+          renameFiles   : false
+        },
+        src : ['with-special-characters/**/*.js', 'with-special-characters/**/*.css'],
+        dest: ['with-special-characters/*.html']
       }
     }
   });

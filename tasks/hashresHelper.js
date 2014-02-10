@@ -2,7 +2,7 @@
  * grunt-hashres
  * https://github.com/luismahou/grunt-hashres
  *
- * Copyright (c) 2012 Luismahou
+ * Copyright (c) 2013 Luismahou
  * Licensed under the MIT license.
  */
 
@@ -36,7 +36,9 @@ exports.hashAndSub = function(grunt, options) {
       fileNameFormat   = options.fileNameFormat,
       renameFiles      = options.renameFiles,
       nameToHashedName = {},
-      formatter        = null;
+      nameToNameSearch = {},
+      formatter        = null,
+      searchFormatter  = null;
 
   grunt.log.debug('files: ' + options.files);
   grunt.log.debug('Using encoding ' + encoding);
@@ -44,20 +46,28 @@ exports.hashAndSub = function(grunt, options) {
   grunt.log.debug(renameFiles ? 'Renaming files' : 'Not renaming files');
 
   formatter = utils.compileFormat(fileNameFormat);
+  searchFormatter = utils.compileSearchFormat(fileNameFormat);
 
   if (options.files) {
     options.files.forEach(function(f) {
       f.src.forEach(function(src) {
-        var md5       = utils.md5(src).slice(0, 8),
-            fileName  = path.basename(src),
-            lastIndex = fileName.lastIndexOf('.'),
-            renamed   = formatter({
+        var md5        = utils.md5(src).slice(0, 8),
+            fileName   = path.basename(src),
+            lastIndex  = fileName.lastIndexOf('.'),
+            renamed    = formatter({
               hash: md5,
               name: fileName.slice(0, lastIndex),
-              ext : fileName.slice(lastIndex + 1, fileName.length) });
+              ext : fileName.slice(lastIndex + 1, fileName.length)
+            }),
+            nameSearch = searchFormatter({
+              hash: /[0-9a-f]{8}/,
+              name: fileName.slice(0, lastIndex),
+              ext: fileName.slice(lastIndex + 1, fileName.length)
+            });
 
         // Mapping the original name with hashed one for later use.
         nameToHashedName[fileName] = renamed;
+        nameToNameSearch[fileName] = nameSearch;
 
         // Renaming the file
         if (renameFiles) {

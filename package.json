@@ -1,7 +1,7 @@
 {
   "name": "grunt-hashres",
   "description": "Hashes your js and css files and rename the <script> and <link> declarations that refer to them in your html/php/etc files.",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "homepage": "https://github.com/luismahou/grunt-hashres",
   "author": {
     "name": "luismahou"
