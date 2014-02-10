@@ -18,7 +18,8 @@ module.exports = function(grunt) {
     var options = this.options({
       fileNameFormat: '${hash}.${name}.cache.${ext}',
       encoding      : 'utf8',
-      renameFiles   : true
+      renameFiles   : true,
+      hashLength    : 8
     });
 
     // Required properties: 'src' and 'dest'
