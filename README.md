@@ -33,7 +33,9 @@ hashres: {
     // Optional. Should files be renamed or only alter the references to the files
     // Use it with '${name}.${ext}?${hash} to get perfect caching without renaming your files
     // Default value: true
-    renameFiles: true
+    renameFiles: true,
+    // Optional. Length of hash to insert. file.js?${hash} -> file.js?214ae4fd
+    hashLength: 8
   },
   // hashres is a multitask. Here 'prod' is the name of the subtask. You can have as many as you want.
   prod: {
@@ -73,6 +75,7 @@ according to the pattern specified in this property. The following variables are
   * ```${name}```: the original name of the file.
   * ```${ext}```: the original extension of the file.
 * ```renameFiles```: Rename the files or leave them in place and only alter the references to them in ```out```. Defaults to ```true```
+* ```hashLength```: Length of ```hash``` portion. Defaults ```8```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
