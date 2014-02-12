@@ -79,9 +79,6 @@ exports.hashAndSub = function(grunt, options) {
         files.forEach(function(value) {
           grunt.log.debug('Substituting ' + value[0] + ' by ' + value[1])
           destContents = destContents.replace(new RegExp(utils.preg_quote(value[0])+"(\\?[0-9a-z]+)?", "g"), value[1]);
-          
-          grunt.log.debug('Substituting ' +  value[1] + ' by ' + value[1]);
-          destContents = destContents.replace(new RegExp(value[1], "g"), value[1]);
         });
         grunt.log.debug('Saving the updated contents of the outination file');
         fs.writeFileSync(f, destContents, encoding);
