@@ -1,0 +1,17 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/bin/npm', 'test' ]
+2 info using npm@1.3.26
+3 info using node@v0.10.11
+4 error Error: ENOENT, open '/home/crodas/projects/newest/grunt-hashres/test/fixtures/same-postfix/package.json'
+5 error If you need help, you may report this *entire* log,
+5 error including the npm and node versions, at:
+5 error     <http://github.com/isaacs/npm/issues>
+6 error System Linux 3.4.63-2.44-desktop
+7 error command "node" "/usr/bin/npm" "test"
+8 error cwd /home/crodas/projects/newest/grunt-hashres/test/fixtures/same-postfix
+9 error node -v v0.10.11
+10 error npm -v 1.3.26
+11 error path /home/crodas/projects/newest/grunt-hashres/test/fixtures/same-postfix/package.json
+12 error code ENOENT
+13 error errno 34
+14 verbose exit [ 34, true ]
