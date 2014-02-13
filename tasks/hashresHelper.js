@@ -60,16 +60,32 @@ exports.hashAndSub = function(grunt, options) {
         grunt.log.write(src + ' ').ok(renamed);
       });
 
+      // sort by length 
+      // It is very useful when we have bar.js and foo-bar.js 
+      // @crodas
+      var files = [];
+      for (var name in nameToHashedName) {
+        files.push([name, nameToHashedName[name]]);
+      }
+      files.sort(function(a, b) {
+        return b[0].length - a[0].length;
+      });
+
+
+
       // Substituting references to the given files with the hashed ones.
       grunt.file.expand(f.dest).forEach(function(f) {
         var destContents = fs.readFileSync(f, encoding);
-        for (var name in nameToHashedName) {
-          grunt.log.debug('Substituting ' + name + ' by ' + nameToHashedName[name]);
-          destContents = destContents.replace(new RegExp(utils.preg_quote(name)+"(\\?[0-9a-z]+)?", "g"), nameToHashedName[name]);
-          
-          grunt.log.debug('Substituting ' +  nameToNameSearch[name] + ' by ' + nameToHashedName[name]);
-          destContents = destContents.replace(new RegExp(nameToNameSearch[name], "g"), nameToHashedName[name]);
-        }
+        files.forEach(function(value) {
+          grunt.log.debug('Substituting ' + value[0] + ' by ' + value[1])
+          destContents = destContents.replace(new RegExp(utils.preg_quote(value[0])+"(\\?[0-9a-z]+)?", "g"), value[1]);
+
+          grunt.log.debug('Substituting ' + nameToNameSearch[value[0]] + ' by ' + value[1])
+          destContents = destContents.replace(
+                new RegExp(nameToNameSearch[value[0]], "g"), 
+                value[1]
+            );
+        });
         grunt.log.debug('Saving the updated contents of the outination file');
         fs.writeFileSync(f, destContents, encoding);
       });
