@@ -79,6 +79,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 Add unit tests for any new or changed functionality. Lint and test your code using [grunt][grunt].
 
 ## Release History
+* 13/02/14 - 0.4.1: Bugfix [#32](https://github.com/Luismahou/grunt-hashres/pull/32): Now it works when you try to substitute ```bar.js``` and ```foobar.js``` in the same go. Thanks to [crodas](https://github.com/crodas)
 * 24/01/14 - 0.4.0: Due to popular demand (see [#26](https://github.com/Luismahou/grunt-hashres/issues/26), [#29](https://github.com/Luismahou/grunt-hashres/issues/29), and more) ```grunt-hashres``` now support to run multiple times the hashing without creating a clean copy of the files to hash. Thanks to [jrduncans](https://github.com/jrduncans) and [ajaybc](https://github.com/ajaybc) for their effort.
 * 17/11/14 - 0.3.4: Bugfix [#18](https://github.com/Luismahou/grunt-hashres/pull/18): Fixed special character test that doesn't work on windows.
 * 07/11/13 - 0.3.3: Bugfix [#16](https://github.com/Luismahou/grunt-hashres/pull/16): Renaming files with special characters. Thanks to [crodas](https://github.com/crodas).
