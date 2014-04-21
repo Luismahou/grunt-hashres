@@ -1,6 +1,6 @@
-## grunt-hashres has been updated to Grunt 0.4. if you're still using Grunt 0.3.x go to [old version documentation](https://github.com/Luismahou/grunt-hashres/blob/master/README-grunt-0.3.md)
+# grunt-hashres2
 
-# grunt-hashres
+This is *fork* of original [grunt-hashres](https://github.com/Luismahou/grunt-hashres), that has this [pull-request](https://github.com/Luismahou/grunt-hashres/pull/9) never accepted, so new npm module is published.
 
 Hashes your js and css files and rename the ```<script>``` and ```<link>``` declarations that refer to them in your html/php/etc files.
 
