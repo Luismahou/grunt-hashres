@@ -10,7 +10,7 @@ Install this grunt plugin next to your project's [Gruntfile.js][getting_started]
 Then add this line to your project's `grunt.js` gruntfile:
 
 ```js
-grunt.loadNpmTasks('grunt-hashres');
+grunt.loadNpmTasks('grunt-hashres2');
 ```
 
 [grunt]: http://gruntjs.com/
