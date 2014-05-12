@@ -33,10 +33,22 @@ exports.hashAndSub = function(grunt, options) {
   searchFormatter = utils.compileSearchFormat(fileNameFormat);
 
   if (options.files) {
+    // get common directory path
+    var mergedFilePaths = [];
+    options.files.forEach(function(f) {
+      mergedFilePaths = mergedFilePaths.concat(f.src.map(function(src) {
+        return path.dirname(src);
+      }));
+    });
+    var commonpath = utils.findCommonPath(mergedFilePaths);
+    grunt.log.debug('common path: ' + commonpath);
+
     options.files.forEach(function(f) {
       f.src.forEach(function(src) {
         var md5        = utils.md5(src).slice(0, 8),
             fileName   = path.basename(src),
+            filePath   = path.dirname(src).replace(commonpath, '').replace(/^\//g, ''), // remove slashes at beginning
+            key        = path.join(filePath, fileName),
             lastIndex  = fileName.lastIndexOf('.'),
             renamed    = formatter({
               hash: md5,
@@ -50,8 +62,8 @@ exports.hashAndSub = function(grunt, options) {
             });
 
         // Mapping the original name with hashed one for later use.
-        nameToHashedName[fileName] = renamed;
-        nameToNameSearch[fileName] = nameSearch;
+        nameToHashedName[key] = path.join(filePath, renamed);
+        nameToNameSearch[key] = path.join(filePath, nameSearch);
 
         // Renaming the file
         if (renameFiles) {
@@ -64,8 +76,8 @@ exports.hashAndSub = function(grunt, options) {
       // It is very useful when we have bar.js and foo-bar.js
       // @crodas
       var files = [];
-      for (var name in nameToHashedName) {
-        files.push([name, nameToHashedName[name]]);
+      for (var src in nameToHashedName) {
+        files.push([src, nameToHashedName[src]]);
       }
       files.sort(function(a, b) {
         return b[0].length - a[0].length;

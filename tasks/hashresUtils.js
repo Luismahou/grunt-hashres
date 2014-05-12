@@ -9,7 +9,8 @@
 'use strict';
 
 var crypto = require('crypto'),
-    fs     = require('fs');
+    fs     = require('fs'),
+    path   = require('path');
 
 function preg_quote (str, delimiter) {
   // http://kevin.vanzonneveld.net
@@ -61,4 +62,23 @@ exports.md5 = function(filepath) {
   var hash = crypto.createHash('md5');
   hash.update(fs.readFileSync(String(filepath), 'utf8'));
   return hash.digest('hex');
+};
+
+exports.findCommonPath = function(files) {
+  var commonpath = [];
+  var filepaths = [];
+  for (var x = 0; x < files.length; x++) {
+    filepaths.push(files[x].split(path.sep));
+  }
+
+  for (var i = 0; i < filepaths[0].length; i++) {
+    var segment = filepaths[0][i];
+    for (var j = 1; j < files.length; j++) {
+      if (segment !== filepaths[j][i]) { // if we can't find the segment in the next file path, we cannot continue
+        return commonpath.join(path.sep);
+      }
+    }
+    commonpath.push(segment);
+  }
+  return commonpath.join(path.sep);
 };
