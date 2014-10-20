@@ -37,7 +37,9 @@ exports.hashAndSub = function(grunt, options) {
       f.src.forEach(function(src) {
         var md5        = utils.md5(src).slice(0, 8),
             fileName   = path.basename(src),
-            lastIndex  = fileName.lastIndexOf('.'),
+            lastIndex  = options.knownExtensions ? options.knownExtensions.concat('.').reduce(function(index, ext) {
+              return index === -1 ? fileName.lastIndexOf(ext) : index;
+            }, -1) : fileName.lastIndexOf('.'),
             renamed    = formatter({
               hash: md5,
               name: fileName.slice(0, lastIndex),
@@ -62,6 +64,7 @@ exports.hashAndSub = function(grunt, options) {
 
       // sort by length 
       // It is very useful when we have bar.js and foo-bar.js 
+      // Longest (most specific filename) will be replaced first so can't clash with subsequent partial matches
       // @crodas
       var files = [];
       for (var name in nameToHashedName) {
@@ -71,6 +74,11 @@ exports.hashAndSub = function(grunt, options) {
         return b[0].length - a[0].length;
       });
 
+      // reverse sort by length
+      // It is very useful when updating existing hashes like foo.12345678.js and foo.12345678.js.map
+      // Longest (most specific filename) will be replaced last so can't be overridden by partial matches
+      // @cyberthom
+      var reversedFiles = files.slice(0).reverse();
 
 
       // Substituting references to the given files with the hashed ones.
@@ -79,12 +87,10 @@ exports.hashAndSub = function(grunt, options) {
         files.forEach(function(value) {
           grunt.log.debug('Substituting ' + value[0] + ' by ' + value[1])
           destContents = destContents.replace(new RegExp(utils.preg_quote(value[0])+"(\\?[0-9a-z]+)?", "g"), value[1]);
-
+        });
+        reversedFiles.forEach(function(value) {
           grunt.log.debug('Substituting ' + nameToNameSearch[value[0]] + ' by ' + value[1])
-          destContents = destContents.replace(
-                new RegExp(nameToNameSearch[value[0]], "g"), 
-                value[1]
-            );
+          destContents = destContents.replace(new RegExp(nameToNameSearch[value[0]], "g"), value[1]);
         });
         grunt.log.debug('Saving the updated contents of the outination file');
         fs.writeFileSync(f, destContents, encoding);

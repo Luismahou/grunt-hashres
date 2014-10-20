@@ -72,6 +72,8 @@ according to the pattern specified in this property. The following variables are
   * ```${hash}```: the first 8 digits of the md5 of the file.
   * ```${name}```: the original name of the file.
   * ```${ext}```: the original extension of the file.
+* ```knownExtensions```: An array of compound file extensions you don't want hashres to split up. 
+Protects minified files and sourcemaps by default. Specify an array like so to override: ```['.min.js', '.min.css', '.js.map', '.css.map']```
 * ```renameFiles```: Rename the files or leave them in place and only alter the references to them in ```out```. Defaults to ```true```
 
 ## Contributing

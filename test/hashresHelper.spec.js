@@ -37,6 +37,22 @@ vows.describe('hashresHelper').addBatch({
       var html = fs.readFileSync('./temp/helper/simple/index.html', 'utf8');
       assert(html.indexOf('5a7a5b61.myscripts.cache.js') !== -1);
     },
+    'for sourcemaps sample': function(grunt) {
+      helper.hashAndSub(
+        grunt, {
+          files: [{
+            src  : grunt.file.expand(['./temp/helper/sourcemaps/*']),
+            dest : './temp/helper/sourcemaps/scripts.868d9070.min.js',
+          }],
+          fileNameFormat : '${name}.${hash}.${ext}',
+          knownExtensions: ['.min.', '.js.', '.css.'],
+          encoding       : 'utf8',
+          renameFiles    : true
+        });
+      assert(fs.existsSync('./temp/helper/sourcemaps/scripts.3bd067b9.js'));
+      var minified = fs.readFileSync('./temp/helper/sourcemaps/scripts.868d9070.min.js', 'utf8');
+      assert(minified.indexOf('scripts.3ba33de5.min.js.map') !== -1);
+    },
     'for sample with subfolders': function(grunt) {
       helper.hashAndSub(
         grunt, {

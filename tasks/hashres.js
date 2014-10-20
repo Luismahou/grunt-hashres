@@ -16,9 +16,10 @@ module.exports = function(grunt) {
 
     // Merging options with defaults
     var options = this.options({
-      fileNameFormat: '${hash}.${name}.cache.${ext}',
-      encoding      : 'utf8',
-      renameFiles   : true
+      fileNameFormat : '${hash}.${name}.cache.${ext}',
+      encoding       : 'utf8',
+      knownExtensions: ['.min.', '.js.', '.css.'], // Handles compounds like `*.min.css`, `*.js.map`, `*.min.js.map` and variations
+      renameFiles    : true
     });
 
     // Required properties: 'src' and 'dest'
@@ -26,11 +27,12 @@ module.exports = function(grunt) {
     this.requiresConfig(this.name + '.' + this.target + '.dest');
     helper.hashAndSub(grunt, {
       files: this.files,
-      src           : options.src,
-      dest          : options.dest,
-      encoding      : options.encoding,
-      fileNameFormat: options.fileNameFormat,
-      renameFiles   : options.renameFiles
+      src            : options.src,
+      dest           : options.dest,
+      encoding       : options.encoding,
+      fileNameFormat : options.fileNameFormat,
+      knownExtensions: options.knownExtensions,
+      renameFiles    : options.renameFiles
     });
   });
 
