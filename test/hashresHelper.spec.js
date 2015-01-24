@@ -60,6 +60,23 @@ vows.describe('hashresHelper').addBatch({
       assert(html.indexOf('scripts/5a7a5b61-myscripts2.js') !== -1);
       assert(html.indexOf('styles/3b97b071-mystyles1.css') !== -1);
       assert(html.indexOf('styles/3b97b071-mystyles2.css') !== -1);
-    }
+    },
+    'for partial sample': function(grunt) {
+      helper.hashAndSub(
+        grunt, {
+          files: [{
+            src  : ['./temp/helper/partial/myscripts.js'],
+            dest : './temp/helper/partial/index.html',
+          }],
+          fileNameFormat: '${hash}.${name}.cache.${ext}',
+          encoding      : 'utf8',
+          renameFiles   : true
+        });
+      assert(fs.existsSync('./temp/helper/partial/5a7a5b61.myscripts.cache.js'));
+
+      var html = fs.readFileSync('./temp/helper/partial/index.html', 'utf8');
+      assert(html.indexOf('5a7a5b61.myscripts.cache.js') !== -1);
+      assert(html.indexOf('mobile-5a7a5b61.myscripts.cache.js') === -1);
+    },
   }
 }).export(module);
