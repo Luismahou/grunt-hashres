@@ -42,6 +42,7 @@ var pathWithDefaultOptions    = 'temp/hashres/options/with-default-options';
 var pathSamePostFix           = 'temp/hashres/same-postfix';
 var pathWithSpecialCharacters = 'temp/hashres/options/with-special-characters';
 var pathOverridingHashedFiles = 'temp/hashres/overriding';
+var pathWithUrlParams         = 'temp/hashres/withurlparams';
 
 vows.describe('hashres').addBatch({
   'with custom options': {
@@ -134,6 +135,22 @@ vows.describe('hashres').addBatch({
       // index.html has been updated with the second version
       var html = grunt.file.read(pathOverridingHashedFiles + '/index.html');
       assert(html.indexOf('js/cab5c571.script.cache.js') !== -1);
+    }
+  },
+  'replacing with url parameters': {
+    topic: function() {
+      runCommand(
+        '../../../node_modules/grunt-cli/bin/./grunt hashres:withUrlParams',
+        { cwd: pathWithUrlParams },
+        this.callback);
+    },
+    'hashes resources with a quetsion mark at the end and does not chop off the question mark': function() {
+      assert(grunt.file.exists(pathWithUrlParams + '/8e99730f.myscripts.cache.js'));
+      assert(grunt.file.exists(pathWithUrlParams + '/8e99730f.test.cache.js'));
+      // index.html has been updated with the second version
+      var html = grunt.file.read(pathWithUrlParams + '/index.html');
+      assert(html.indexOf('8e99730f.myscripts.cache.js?v=4.2.0') !== -1);
+      assert(html.indexOf('8e99730f.test.cache.js') !== -1);
     }
   }
 }).export(module);
