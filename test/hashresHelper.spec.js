@@ -95,23 +95,7 @@ vows.describe('hashresHelper').addBatch({
           encoding      : 'utf8',
           renameFiles   : true
         });
-
-/*
-      helper.hashAndSub(
-        grunt, {
-          files: [{
-            src : grunt.file.expand([
-              './temp/helper/subfolders-querystring2/scripts/*.js',
-              './temp/helper/subfolders-querystring2/styles/mystyles1.css',
-              './temp/helper/subfolders-querystring2/styles/mystyles2.css']),
-            dest: './temp/helper/subfolders-querystring2/index.html'
-          }],
-          fileNameFormat: '${name}.${ext}?v=${hash}',
-          encoding      : 'utf8',
-          renameFiles   : true
-        });
-
-*/
+      
       var html = fs.readFileSync('./temp/helper/subfolders-querystring2/index.html', 'utf8');
       assert(html.indexOf('"scripts/myscripts1.js?v=5a7a5b61"') !== -1);
       assert(html.indexOf('"scripts/myscripts2.js?v=5a7a5b61"') !== -1);
