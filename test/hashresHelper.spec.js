@@ -60,6 +60,29 @@ vows.describe('hashresHelper').addBatch({
       assert(html.indexOf('scripts/5a7a5b61-myscripts2.js') !== -1);
       assert(html.indexOf('styles/3b97b071-mystyles1.css') !== -1);
       assert(html.indexOf('styles/3b97b071-mystyles2.css') !== -1);
+    },
+    'for sample with subfolders same filename': function(grunt) {
+      helper.hashAndSub(
+        grunt, {
+          files: [{
+            src : grunt.file.expand([
+              './temp/helper/subfolders-same-filename/scripts/**/*.js',
+              './temp/helper/subfolders-same-filename/styles/**/*.css']),
+            dest: './temp/helper/subfolders-same-filename/index.html'
+          }],
+          fileNameFormat: '${hash}-${name}.${ext}',
+          encoding      : 'utf8',
+          renameFiles   : true
+        });
+      assert(fs.existsSync('./temp/helper/subfolders-same-filename/scripts/5a7a5b61-myscripts1.js'));
+      assert(fs.existsSync('./temp/helper/subfolders-same-filename/scripts/sub/dc5dec8b-myscripts1.js'));
+      assert(fs.existsSync('./temp/helper/subfolders-same-filename/styles/3b97b071-mystyles1.css'));
+      assert(fs.existsSync('./temp/helper/subfolders-same-filename/styles/sub/5167a072-mystyles1.css'));
+      var html = fs.readFileSync('./temp/helper/subfolders-same-filename/index.html', 'utf8');
+      assert(html.indexOf('scripts/5a7a5b61-myscripts1.js') !== -1);
+      assert(html.indexOf('scripts/sub/dc5dec8b-myscripts1.js') !== -1);
+      assert(html.indexOf('styles/3b97b071-mystyles1.css') !== -1);
+      assert(html.indexOf('styles/sub/5167a072-mystyles1.css') !== -1);
     }
   }
 }).export(module);
