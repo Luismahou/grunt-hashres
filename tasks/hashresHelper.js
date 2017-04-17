@@ -60,8 +60,8 @@ exports.hashAndSub = function(grunt, options) {
         grunt.log.write(src + ' ').ok(renamed);
       });
 
-      // sort by length 
-      // It is very useful when we have bar.js and foo-bar.js 
+      // sort by length
+      // It is very useful when we have bar.js and foo-bar.js
       // @crodas
       var files = [];
       for (var name in nameToHashedName) {
@@ -78,11 +78,11 @@ exports.hashAndSub = function(grunt, options) {
         var destContents = fs.readFileSync(f, encoding);
         files.forEach(function(value) {
           grunt.log.debug('Substituting ' + value[0] + ' by ' + value[1])
-          destContents = destContents.replace(new RegExp(utils.preg_quote(value[0])+"(\\?[0-9a-z]+)?", "g"), value[1]);
+          destContents = destContents.replace(new RegExp(utils.preg_quote(value[0])+"(\\?[0-9a-f]{8}$)?", "g"), value[1]);
 
           grunt.log.debug('Substituting ' + nameToNameSearch[value[0]] + ' by ' + value[1])
           destContents = destContents.replace(
-                new RegExp(nameToNameSearch[value[0]], "g"), 
+                new RegExp(nameToNameSearch[value[0]], "g"),
                 value[1]
             );
         });
