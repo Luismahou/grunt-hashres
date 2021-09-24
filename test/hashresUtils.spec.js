@@ -53,7 +53,7 @@ vows.describe('Hashres Utils').addBatch({
     topic: utils,
     './fixtures/knownMd5.js': function(utils) {
       assert.equal(
-        utils.md5('./test/fixtures/knownMd5.js'),
+        utils.md5File('./test/fixtures/knownMd5.js'),
         'd845a23e205d256a5bcfffbecb4b7c35');
     }
   }

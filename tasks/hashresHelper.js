@@ -10,16 +10,13 @@
 
 var fs    = require('fs'),
     path  = require('path'),
+    graphlib  = require('graphlib'),
     utils = require('./hashresUtils');
 
 exports.hashAndSub = function(grunt, options) {
-
-  var src              = options.src,
-      dest             = options.dest,
-      encoding         = options.encoding,
+  var encoding         = options.encoding,
       fileNameFormat   = options.fileNameFormat,
       renameFiles      = options.renameFiles,
-      nameToHashedName = {},
       nameToNameSearch = {},
       formatter        = null,
       searchFormatter  = null;
@@ -32,62 +29,133 @@ exports.hashAndSub = function(grunt, options) {
   formatter = utils.compileFormat(fileNameFormat);
   searchFormatter = utils.compileSearchFormat(fileNameFormat);
 
+  const createRegexFromCharArray = (chars) => '([' + chars.map(utils.preg_quote).join('') + '])';
+  const referenceSearchBeginRegexp =  createRegexFromCharArray(['"', "'", '/', '=', ' ', '(']);
+  const referenceSearchEndRegexp = createRegexFromCharArray(['"', "'", '>', ' ', ')', '?', '#']);
+  const wrapFilenameRegexStr = (str) => referenceSearchBeginRegexp + str + referenceSearchEndRegexp;
+
   if (options.files) {
     options.files.forEach(function(f) {
-      f.src.forEach(function(src) {
-        var md5        = utils.md5(src).slice(0, 8),
-            fileName   = path.basename(src),
-            lastIndex  = fileName.lastIndexOf('.'),
-            renamed    = formatter({
-              hash: md5,
-              name: fileName.slice(0, lastIndex),
-              ext : fileName.slice(lastIndex + 1, fileName.length)
-            }),
-            nameSearch = searchFormatter({
-              hash: /[0-9a-f]{8}/,
-              name: fileName.slice(0, lastIndex),
-              ext: fileName.slice(lastIndex + 1, fileName.length)
-            });
+      // fileDependencyGraph stores nodes as realpath => basename
+      var fileDependencyGraph = new graphlib.Graph({ directed: true  });
+      var basenameToRealpaths = {};
 
-        // Mapping the original name with hashed one for later use.
-        nameToHashedName[fileName] = renamed;
-        nameToNameSearch[fileName] = nameSearch;
+      f.src.forEach(function (src) {
+        var fileName = path.basename(src),
+          nodeId = fs.realpathSync(src),
+          lastIndex = fileName.lastIndexOf('.');
 
-        // Renaming the file
-        if (renameFiles) {
-          fs.renameSync(src, path.resolve(path.dirname(src), renamed));
+        nameToNameSearch[fileName] = searchFormatter({
+          hash: /[0-9a-f]{8}/,
+          name: fileName.slice(0, lastIndex),
+          ext: fileName.slice(lastIndex + 1, fileName.length)
+        });
+
+        fileDependencyGraph.setNode(nodeId, fileName);
+
+        if (! basenameToRealpaths.hasOwnProperty(fileName)) {
+          basenameToRealpaths[fileName] = [];
         }
-        grunt.log.write(src + ' ').ok(renamed);
+
+        basenameToRealpaths[fileName].push(nodeId);
       });
 
       // sort by length 
       // It is very useful when we have bar.js and foo-bar.js 
       // @crodas
-      var files = [];
-      for (var name in nameToHashedName) {
-        files.push([name, nameToHashedName[name]]);
-      }
+      var files = Object.keys(basenameToRealpaths);
+
       files.sort(function(a, b) {
         return b[0].length - a[0].length;
       });
 
-
-
       // Substituting references to the given files with the hashed ones.
       grunt.file.expand(f.dest).forEach(function(f) {
         var destContents = fs.readFileSync(f, encoding);
-        files.forEach(function(value) {
-          grunt.log.debug('Substituting ' + value[0] + ' by ' + value[1]);
-          destContents = destContents.replace(new RegExp(utils.preg_quote(value[0])+"(\\?[0-9a-z]+)?", "g"), value[1]);
+        var destNodeId = fs.realpathSync(f);
 
-          grunt.log.debug('Substituting ' + nameToNameSearch[value[0]] + ' by ' + value[1]);
-          destContents = destContents.replace(
-                new RegExp(nameToNameSearch[value[0]], "g"), 
-                value[1]
-            );
+        files.forEach(function(basename) {
+          var matches = destContents.match(
+              new RegExp(wrapFilenameRegexStr(utils.preg_quote(basename)+"(\\?[0-9a-z]+)?"))
+            ) !== null || destContents.match(new RegExp(wrapFilenameRegexStr(nameToNameSearch[basename]))) !== null;
+
+          if (matches) {
+            for (const nodeId of basenameToRealpaths[basename]) {
+              fileDependencyGraph.setEdge(destNodeId, nodeId);
+            }
+          }
         });
-        grunt.log.debug('Saving the updated contents of the destination file');
-        fs.writeFileSync(f, destContents, encoding);
+      });
+
+      // dag stores nodes as "arbitrary ID" => [realpaths]
+      var dag = utils.mergeGraphCycles(fileDependencyGraph);
+      var dagNodeHashesMap = {};
+
+      graphlib.alg.topsort(dag).reverse().forEach(function (dagNodeId) {
+        dag.successors(dagNodeId).forEach(function (succDagNodeId) {
+          var succRenamedMap = {};
+
+          dag.node(succDagNodeId).forEach(function (srcFile) {
+            var fileName = fileDependencyGraph.node(srcFile),
+                lastIndex  = fileName.lastIndexOf('.');
+            succRenamedMap[srcFile] = formatter({
+              hash: dagNodeHashesMap[succDagNodeId],
+              name: fileName.slice(0, lastIndex),
+              ext : fileName.slice(lastIndex + 1, fileName.length)
+            });
+          });
+
+          dag.node(dagNodeId).forEach(function (dstFile) {
+            var destContents = fs.readFileSync(dstFile, encoding);
+            dag.node(succDagNodeId).forEach(function (srcFile) {
+              var srcBaseName = fileDependencyGraph.node(srcFile);
+              var renamed = succRenamedMap[srcFile];
+              grunt.log.debug('Substituting ' + srcBaseName + ' by ' + renamed);
+              destContents = destContents.replace(
+                new RegExp(wrapFilenameRegexStr(utils.preg_quote(srcBaseName)+"(\\?[0-9a-z]+)?"), "g"),
+                '$1' + utils.quoteReplacementString(renamed) + '$3'
+              );
+
+              grunt.log.debug('Substituting ' + nameToNameSearch[srcBaseName] + ' by ' + renamed);
+              destContents = destContents.replace(
+                new RegExp(wrapFilenameRegexStr(nameToNameSearch[srcBaseName]), "g"),
+                '$1' + utils.quoteReplacementString(renamed) + '$2'
+              );
+            });
+            fs.writeFileSync(dstFile, destContents, encoding);
+          });
+        });
+
+        var subhashes = [];
+
+        dag.node(dagNodeId).forEach(function (src) {
+          subhashes.push(utils.md5File(src));
+        });
+
+        var md5 = dagNodeHashesMap[dagNodeId] =
+          (subhashes.length === 1 ? subhashes[0] : utils.md5String(subhashes.join(''))).slice(0, 8);
+
+        dag.node(dagNodeId).forEach(function (src) {
+          // This file is only in dest, not in source.
+          if (typeof fileDependencyGraph.node(src) === 'undefined') {
+            return;
+          }
+
+          var fileName = fileDependencyGraph.node(src),
+            lastIndex  = fileName.lastIndexOf('.'),
+            renamed    = formatter({
+              hash: md5,
+              name: fileName.slice(0, lastIndex),
+              ext : fileName.slice(lastIndex + 1, fileName.length)
+            });
+
+          // Renaming the file
+          if (renameFiles) {
+            fs.renameSync(src, path.resolve(path.dirname(src), renamed));
+          }
+
+          grunt.log.write(src + ' ').ok(renamed);
+        });
       });
     });
   }

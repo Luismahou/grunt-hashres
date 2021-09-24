@@ -41,6 +41,7 @@
     "hash"
   ],
   "dependencies": {
+    "graphlib": "^2.1.8",
     "wrench": "~1.4.2"
   }
 }

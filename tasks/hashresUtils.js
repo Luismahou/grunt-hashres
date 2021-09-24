@@ -10,6 +10,7 @@
 
 var crypto = require('crypto'),
     fs     = require('fs');
+const graphlib = require("graphlib");
 
 function preg_quote (str, delimiter) {
   // http://kevin.vanzonneveld.net
@@ -28,6 +29,10 @@ function preg_quote (str, delimiter) {
 }
 
 exports.preg_quote = preg_quote;
+
+exports.quoteReplacementString = function (str) {
+  return str.replaceAll('$', '$$$$');
+};
 
 function escapeNonRegex(input) {
   return (input instanceof RegExp) ? input.source : preg_quote(input);
@@ -57,8 +62,62 @@ exports.compileSearchFormat = function(format) {
 };
 
 // Generates the md5 for the given file
-exports.md5 = function(filepath) {
+exports.md5File = function(filepath) {
   var hash = crypto.createHash('md5');
   hash.update(fs.readFileSync(String(filepath), 'utf8'));
   return hash.digest('hex');
+};
+
+exports.md5String = function(str) {
+  var hash = crypto.createHash('md5');
+  hash.update(str);
+  return hash.digest('hex');
+};
+
+/**
+ * @param {Graph} graph
+ * @returns {Graph}
+ */
+exports.mergeGraphCycles = function (graph) {
+  var dag = new graphlib.Graph({ directed: true });
+  var cycles = graphlib.alg.findCycles(graph);
+  var cycleMap = {};
+
+  cycles.forEach(function (cycle, idx) {
+    cycle.forEach(function (nodeId) {
+      cycleMap[nodeId] = idx;
+    });
+  });
+
+  var graphNodeIdToDagNodeIdMap = {};
+  var currentDagNodeId = 0;
+
+  graph.nodes().forEach(function (nodeId) {
+    if (cycleMap.hasOwnProperty(nodeId)) {
+      var dagCycleId = 'c' + cycleMap[nodeId];
+      graphNodeIdToDagNodeIdMap[nodeId] = dagCycleId;
+
+      if (! dag.hasNode(dagCycleId)) {
+        dag.setNode(dagCycleId, cycles[cycleMap[nodeId]]);
+      }
+    } else {
+      graphNodeIdToDagNodeIdMap[nodeId] = currentDagNodeId;
+      dag.setNode(currentDagNodeId, [nodeId]);
+      currentDagNodeId++;
+    }
+  });
+
+  graph.edges().forEach(function (edge) {
+    var dv = graphNodeIdToDagNodeIdMap[edge.v],
+      dw = graphNodeIdToDagNodeIdMap[edge.w];
+
+    // edge is part of a cycle
+    if (dv === dw) {
+      return;
+    }
+
+    dag.setEdge(dv, dw);
+  });
+
+  return dag;
 };
