@@ -8,9 +8,9 @@
 
 'use strict';
 
-var crypto = require('crypto'),
-    fs     = require('fs');
-const graphlib = require("graphlib");
+const crypto = require('crypto'),
+      fs = require('fs'),
+      graphlib = require("graphlib");
 
 function preg_quote (str, delimiter) {
   // http://kevin.vanzonneveld.net
@@ -42,7 +42,7 @@ function escapeNonRegex(input) {
 // Valid format variables: ${hash}, ${name} and ${ext}
 exports.compileFormat = function(format) {
   return function(options) {
-    var output = format.replace(/\$\{hash\}/g, options.hash);
+    let output = format.replace(/\$\{hash\}/g, options.hash);
     output = output.replace(/\$\{name\}/g, options.name);
     output = output.replace(/\$\{ext\}/g, options.ext);
     return output;
@@ -54,7 +54,7 @@ exports.compileFormat = function(format) {
 exports.compileSearchFormat = function(format) {
   format = preg_quote(format);
   return function(options) {
-    var output = format.split('\\$\\{hash\\}').join(escapeNonRegex(options.hash));
+    let output = format.split('\\$\\{hash\\}').join(escapeNonRegex(options.hash));
     output = output.split('\\$\\{name\\}').join(escapeNonRegex(options.name));
     output = output.split('\\$\\{ext\\}').join(escapeNonRegex(options.ext));
     return output;
@@ -63,13 +63,13 @@ exports.compileSearchFormat = function(format) {
 
 // Generates the md5 for the given file
 exports.md5File = function(filepath) {
-  var hash = crypto.createHash('md5');
+  const hash = crypto.createHash('md5');
   hash.update(fs.readFileSync(String(filepath), 'utf8'));
   return hash.digest('hex');
 };
 
 exports.md5String = function(str) {
-  var hash = crypto.createHash('md5');
+  const hash = crypto.createHash('md5');
   hash.update(str);
   return hash.digest('hex');
 };
@@ -79,9 +79,9 @@ exports.md5String = function(str) {
  * @returns {Graph}
  */
 exports.mergeGraphCycles = function (graph) {
-  var dag = new graphlib.Graph({ directed: true });
-  var cycles = graphlib.alg.findCycles(graph);
-  var cycleMap = {};
+  const dag = new graphlib.Graph({directed: true});
+  const cycles = graphlib.alg.findCycles(graph);
+  const cycleMap = {};
 
   cycles.forEach(function (cycle, idx) {
     cycle.forEach(function (nodeId) {
@@ -89,12 +89,12 @@ exports.mergeGraphCycles = function (graph) {
     });
   });
 
-  var graphNodeIdToDagNodeIdMap = {};
-  var currentDagNodeId = 0;
+  const graphNodeIdToDagNodeIdMap = {};
+  let currentDagNodeId = 0;
 
   graph.nodes().forEach(function (nodeId) {
     if (cycleMap.hasOwnProperty(nodeId)) {
-      var dagCycleId = 'c' + cycleMap[nodeId];
+      const dagCycleId = 'c' + cycleMap[nodeId];
       graphNodeIdToDagNodeIdMap[nodeId] = dagCycleId;
 
       if (! dag.hasNode(dagCycleId)) {
@@ -108,7 +108,7 @@ exports.mergeGraphCycles = function (graph) {
   });
 
   graph.edges().forEach(function (edge) {
-    var dv = graphNodeIdToDagNodeIdMap[edge.v],
+    const dv = graphNodeIdToDagNodeIdMap[edge.v],
       dw = graphNodeIdToDagNodeIdMap[edge.w];
 
     // edge is part of a cycle

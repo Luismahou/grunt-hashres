@@ -10,15 +10,15 @@
 
 module.exports = function(grunt) {
 
-  var helper = require('./hashresHelper');
+  const helper = require('./hashresHelper');
 
   grunt.registerMultiTask('hashres', 'Your task description goes here.', function() {
 
     // Merging options with defaults
-    var options = this.options({
+    const options = this.options({
       fileNameFormat: '${hash}.${name}.cache.${ext}',
-      encoding      : 'utf8',
-      renameFiles   : true
+      encoding: 'utf8',
+      renameFiles: true
     });
 
     // Required properties: 'src' and 'dest'
