@@ -87,58 +87,64 @@ vows.describe('hashresHelper').addBatch({
       assert(html.indexOf('styles/3b97b071-mystyles1.css') !== -1);
       assert(html.indexOf('styles/3b97b071-mystyles2.css') !== -1);
     },
-    'for recursive imports': function(grunt) {
-      resetDirectoryFromSource('./temp/helper/recursive/', './temp/helper/recursive-temp');
+    'with recursive imports': {
+      topic (grunt) {
+        resetDirectoryFromSource('./temp/helper/recursive/', './temp/helper/recursive-temp');
 
-      var runHashAndSubAndResetDir = function () {
-        helper.hashAndSub(
-          grunt, {
-            files: [{
-              src : grunt.file.expand('./temp/helper/recursive-temp/*.js'),
-              dest: grunt.file.expand('./temp/helper/recursive-temp/*.js'),
-            }],
-            fileNameFormat: '${hash}-${name}.${ext}',
-            encoding      : 'utf8',
-            renameFiles   : true,
-          });
+        const runHashAndSubAndResetDir = function () {
+          helper.hashAndSub(
+            grunt, {
+              files: [{
+                src : grunt.file.expand('./temp/helper/recursive-temp/*.js'),
+                dest: grunt.file.expand('./temp/helper/recursive-temp/*.js'),
+              }],
+              fileNameFormat: '${hash}-${name}.${ext}',
+              encoding      : 'utf8',
+              renameFiles   : true,
+            });
 
-          var result = getSourceNameToHashMap(grunt.file.expand('./temp/helper/recursive-temp/*.js'));
+          const result = getSourceNameToHashMap(grunt.file.expand('./temp/helper/recursive-temp/*.js'));
           resetDirectoryFromSource('./temp/helper/recursive/', './temp/helper/recursive-temp');
 
           return result;
-      };
+        };
 
-      var origHashes = runHashAndSubAndResetDir();
+        const origHashes = runHashAndSubAndResetDir();
+        this.callback(runHashAndSubAndResetDir, origHashes);
+      },
+      'when root file changes': function (runHashAndSubAndResetDir, origHashes) {
+        changeJsFile('./temp/helper/recursive-temp/first.js');
+        const firstFileChangedHashes = runHashAndSubAndResetDir();
 
-      changeJsFile('./temp/helper/recursive-temp/first.js');
-      var firstFileChanged = runHashAndSubAndResetDir();
+        assert(origHashes['first.js'] !== firstFileChangedHashes['first.js']);
+        assert(origHashes['second.js'] === firstFileChangedHashes['second.js']);
+        assert(origHashes['second2.js'] === firstFileChangedHashes['second2.js']);
+        assert(origHashes['second3.js'] === firstFileChangedHashes['second3.js']);
+        assert(origHashes['third.js'] === firstFileChangedHashes['third.js']);
+        assert(origHashes['singleton.js'] === firstFileChangedHashes['singleton.js']);
+      },
+      'when middle file changes (cycle)': function (runHashAndSubAndResetDir, origHashes) {
+        changeJsFile('./temp/helper/recursive-temp/second.js');
+        const secondFileChangedHashes = runHashAndSubAndResetDir();
 
-      assert(origHashes['first.js'] !== firstFileChanged['first.js']);
-      assert(origHashes['second.js'] === firstFileChanged['second.js']);
-      assert(origHashes['second2.js'] === firstFileChanged['second2.js']);
-      assert(origHashes['second3.js'] === firstFileChanged['second3.js']);
-      assert(origHashes['third.js'] === firstFileChanged['third.js']);
-      assert(origHashes['singleton.js'] === firstFileChanged['singleton.js']);
+        assert(origHashes['first.js'] !== secondFileChangedHashes['first.js']);
+        assert(origHashes['second.js'] !== secondFileChangedHashes['second.js']);
+        assert(origHashes['second2.js'] !== secondFileChangedHashes['second2.js']);
+        assert(origHashes['second3.js'] !== secondFileChangedHashes['second3.js']);
+        assert(origHashes['third.js'] === secondFileChangedHashes['third.js']);
+        assert(origHashes['singleton.js'] === secondFileChangedHashes['singleton.js']);
+      },
+      'when leaf file changes': function (runHashAndSubAndResetDir, origHashes) {
+        changeJsFile('./temp/helper/recursive-temp/third.js');
+        const thirdFileChangedHashes = runHashAndSubAndResetDir();
 
-      changeJsFile('./temp/helper/recursive-temp/second.js');
-      var secondFileChangedHashes = runHashAndSubAndResetDir();
-
-      assert(origHashes['first.js'] !== secondFileChangedHashes['first.js']);
-      assert(origHashes['second.js'] !== secondFileChangedHashes['second.js']);
-      assert(origHashes['second2.js'] !== secondFileChangedHashes['second2.js']);
-      assert(origHashes['second3.js'] !== secondFileChangedHashes['second3.js']);
-      assert(origHashes['third.js'] === secondFileChangedHashes['third.js']);
-      assert(origHashes['singleton.js'] === firstFileChanged['singleton.js']);
-
-      changeJsFile('./temp/helper/recursive-temp/third.js');
-      var thirdFileChanged = runHashAndSubAndResetDir();
-
-      assert(origHashes['first.js'] !== thirdFileChanged['first.js']);
-      assert(origHashes['second.js'] !== thirdFileChanged['second.js']);
-      assert(origHashes['second2.js'] !== thirdFileChanged['second2.js']);
-      assert(origHashes['second3.js'] !== thirdFileChanged['second3.js']);
-      assert(origHashes['third.js'] !== thirdFileChanged['third.js']);
-      assert(origHashes['singleton.js'] === firstFileChanged['singleton.js']);
+        assert(origHashes['first.js'] !== thirdFileChangedHashes['first.js']);
+        assert(origHashes['second.js'] !== thirdFileChangedHashes['second.js']);
+        assert(origHashes['second2.js'] !== thirdFileChangedHashes['second2.js']);
+        assert(origHashes['second3.js'] !== thirdFileChangedHashes['second3.js']);
+        assert(origHashes['third.js'] !== thirdFileChangedHashes['third.js']);
+        assert(origHashes['singleton.js'] === thirdFileChangedHashes['singleton.js']);
+      },
     },
-  }
+  },
 }).export(module);
