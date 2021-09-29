@@ -8,7 +8,7 @@
 
 'use strict';
 
-var vows   = require('vows'),
+const vows   = require('vows'),
     fs     = require('fs'),
     path   = require('path'),
     assert = require('assert'),
@@ -22,15 +22,17 @@ function resetDirectoryFromSource(sourceDir, targetDir) {
   wrench.copyDirSyncRecursive(sourceDir, targetDir, { preserve: false });
 }
 
-function getSourceNameToHashMap(files) {
-  var result = {};
+function getSourceNameToHashMap(files, root) {
+  const result = {};
 
   files.forEach(function (f) {
-    var basename = path.basename(f);
-    var parts = basename.split('-');
-    var origBaseName = parts.slice(1).join('-');
+    const basename = path.basename(f);
+    const parts = basename.split('-');
+    const origBaseName = parts.slice(1).join('-');
+    const newPath = path.dirname(f) + path.sep + origBaseName;
+
     // hash
-    result[origBaseName] = parts[0];
+    result[path.relative(root, newPath)] = parts[0];
   });
 
   return result;
@@ -103,7 +105,7 @@ vows.describe('hashresHelper').addBatch({
               renameFiles   : true,
             });
 
-          const result = getSourceNameToHashMap(grunt.file.expand('./temp/helper/recursive-temp/*.js'));
+          const result = getSourceNameToHashMap(grunt.file.expand('./temp/helper/recursive-temp/*.js'), './temp/helper/recursive-temp');
           resetDirectoryFromSource('./temp/helper/recursive/', './temp/helper/recursive-temp');
 
           return result;
@@ -145,6 +147,84 @@ vows.describe('hashresHelper').addBatch({
         assert(origHashes['third.js'] !== thirdFileChangedHashes['third.js']);
         assert(origHashes['singleton.js'] === thirdFileChangedHashes['singleton.js']);
       },
+    },
+    'when two src files have the same basename': {
+      topic (grunt) {
+        resetDirectoryFromSource('./temp/helper/same-basename/', './temp/helper/same-basename-temp/');
+
+        const runHashAndSub = function () {
+          helper.hashAndSub(
+            grunt, {
+              files: [{
+                src : grunt.file.expand('./temp/helper/same-basename-temp/**/*.js'),
+                dest: grunt.file.expand('./temp/helper/same-basename-temp/**/*.js'),
+              }],
+              fileNameFormat: '${hash}-${name}.${ext}',
+              encoding      : 'utf8',
+              renameFiles   : true,
+            });
+
+          return getSourceNameToHashMap(grunt.file.expand('./temp/helper/same-basename-temp/**/*.js'), './temp/helper/same-basename-temp');
+        };
+
+        const origHashes = runHashAndSub();
+        this.callback(runHashAndSub, origHashes);
+      },
+      'when script-a.js changes': function (runHashAndSub, origHashes) {
+        resetDirectoryFromSource('./temp/helper/same-basename/', './temp/helper/same-basename-temp/');
+        changeJsFile('./temp/helper/same-basename-temp/script-a.js');
+        const changedHashes = runHashAndSub();
+
+        assert(origHashes['script-a.js'] !== changedHashes['script-a.js']);
+        assert(origHashes['script-b.js'] === changedHashes['script-b.js']);
+        assert(origHashes['a/service.js'] === changedHashes['a/service.js']);
+        assert(origHashes['b/service.js'] === changedHashes['b/service.js']);
+      },
+      'when a/service.js changes': function (runHashAndSub, origHashes) {
+        resetDirectoryFromSource('./temp/helper/same-basename/', './temp/helper/same-basename-temp/');
+        changeJsFile('./temp/helper/same-basename-temp/a/service.js');
+        const changedHashes = runHashAndSub();
+
+        assert(origHashes['script-a.js'] !== changedHashes['script-a.js']);
+        assert(origHashes['a/service.js'] !== changedHashes['a/service.js']);
+        // We're not checking that script-b and b/service.js remain the same to allow naive solutions
+        // such as considering all the files with the same basename together.
+        // However, the hash in script-b.js must be correct.
+        const scriptBContents = fs.readFileSync(grunt.file.expand('./temp/helper/same-basename-temp/*script-b.js')[0], 'utf8');
+        assert(scriptBContents.indexOf(changedHashes['b/service.js']) !== -1);
+      },
+      'when b/service.js changes': function (runHashAndSub, origHashes) {
+        resetDirectoryFromSource('./temp/helper/same-basename/', './temp/helper/same-basename-temp/');
+        changeJsFile('./temp/helper/same-basename-temp/b/service.js');
+        const changedHashes = runHashAndSub();
+
+        assert(origHashes['script-b.js'] !== changedHashes['script-b.js']);
+        assert(origHashes['b/service.js'] !== changedHashes['b/service.js']);
+
+        const scriptAContents = fs.readFileSync(grunt.file.expand('./temp/helper/same-basename-temp/*script-a.js')[0], 'utf8');
+        assert(scriptAContents.indexOf(changedHashes['a/service.js']) !== -1);
+      },
+    },
+    'when two dest files have the same basename': function (grunt) {
+      resetDirectoryFromSource('./temp/helper/same-basename-dest/', './temp/helper/same-basename-dest-temp/');
+      helper.hashAndSub(
+        grunt, {
+          files: [{
+            src : grunt.file.expand('./temp/helper/same-basename-dest-temp/src/*.*'),
+            dest: grunt.file.expand('./temp/helper/same-basename-dest-temp/dest/**/*.*'),
+          }],
+          fileNameFormat: '${hash}-${name}.${ext}',
+          encoding      : 'utf8',
+          renameFiles   : true,
+        });
+      assert(fs.existsSync('./temp/helper/same-basename-dest-temp/src/5a7a5b61-myscripts1.js'));
+      assert(fs.existsSync('./temp/helper/same-basename-dest-temp/src/3b97b071-mystyles1.css'));
+      const htmlA = fs.readFileSync('./temp/helper/same-basename-dest-temp/dest/a/index.html', 'utf8');
+      assert(htmlA.indexOf('5a7a5b61-myscripts1.js') !== -1);
+
+      const htmlB = fs.readFileSync('./temp/helper/same-basename-dest-temp/dest/b/index.html', 'utf8');
+      assert(htmlB.indexOf('5a7a5b61-myscripts1.js') !== -1);
+      assert(htmlB.indexOf('3b97b071-mystyles1.css') !== -1);
     },
   },
 }).export(module);
