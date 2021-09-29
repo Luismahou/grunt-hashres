@@ -31,7 +31,7 @@ function preg_quote (str, delimiter) {
 exports.preg_quote = preg_quote;
 
 exports.quoteReplacementString = function (str) {
-  return str.replaceAll('$', '$$$$');
+  return str.replace(/\$/g, '$$$$');
 };
 
 function escapeNonRegex(input) {
