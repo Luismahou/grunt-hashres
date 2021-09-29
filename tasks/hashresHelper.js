@@ -62,7 +62,7 @@ exports.hashAndSub = function(grunt, options) {
       const basenames = fileDependencyGraph.nodes();
       basenames.sort((a, b) => b[0].length - a[0].length);
 
-      // Substituting references to the given files with the hashed ones.
+      // First we need to find dependencies between files.
       for (const destFile of grunt.file.expand(fileBatch.dest)) {
         const destContents = fs.readFileSync(destFile, encoding);
         const destBasename = path.basename(destFile);
@@ -91,6 +91,7 @@ exports.hashAndSub = function(grunt, options) {
 
       // Each dagNodeId has one or more basenames associated with it in dag.
       // Each basename has one or more realpaths associated with it in fileDependencyGraph.
+      // Dependencies are hashed before the files that depend on them.
       for (const dagNodeId of graphlib.alg.topsort(dag).reverse()) {
         for (const dependencyDagNodeId of dag.successors(dagNodeId)) {
           const dependencyRenamedMap = {};
@@ -127,6 +128,8 @@ exports.hashAndSub = function(grunt, options) {
           }
         }
 
+        // Each of dag node can reference multiple files. The files have already been updated to reference
+        // hashed dependencies. All the files will get one common hash to deal with cycles and relative paths.
         const subhashes = [];
 
         for (const basename of dag.node(dagNodeId)) {
