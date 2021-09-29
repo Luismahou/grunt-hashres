@@ -32,12 +32,12 @@ exports.hashAndSub = function(grunt, options) {
   const wrapFilenameRegexStr = (str) => referenceSearchBeginRegexp + str + referenceSearchEndRegexp;
 
   if (options.files) {
-    options.files.forEach(function(f) {
+    for (const f of options.files) {
       // fileDependencyGraph stores nodes as basename => [real paths]
       const fileDependencyGraph = new graphlib.Graph({directed: true});
       const srcRealpathMap = {};
 
-      f.src.forEach(function (src) {
+      for (const src of f.src) {
         const basename = path.basename(src),
           realpath = fs.realpathSync(src),
           lastIndex = basename.lastIndexOf('.');
@@ -54,7 +54,7 @@ exports.hashAndSub = function(grunt, options) {
         } else {
           fileDependencyGraph.node(basename).add(realpath);
         }
-      });
+      }
 
       // sort by length 
       // It is very useful when we have bar.js and foo-bar.js 
@@ -63,10 +63,10 @@ exports.hashAndSub = function(grunt, options) {
       basenames.sort((a, b) => b[0].length - a[0].length);
 
       // Substituting references to the given files with the hashed ones.
-      grunt.file.expand(f.dest).forEach(function(f) {
-        const destContents = fs.readFileSync(f, encoding);
-        const destNodeId = path.basename(f);
-        const destRealpath = fs.realpathSync(f);
+      for (const destFile of grunt.file.expand(f.dest)) {
+        const destContents = fs.readFileSync(destFile, encoding);
+        const destNodeId = path.basename(destFile);
+        const destRealpath = fs.realpathSync(destFile);
 
         if (! fileDependencyGraph.hasNode(destNodeId)) {
           fileDependencyGraph.setNode(destNodeId, new Set([destRealpath]));
@@ -74,7 +74,7 @@ exports.hashAndSub = function(grunt, options) {
           fileDependencyGraph.node(destNodeId).add(destRealpath);
         }
 
-        basenames.forEach(function(basename) {
+        for (const basename of basenames) {
           const matches = destContents.match(
             new RegExp(wrapFilenameRegexStr(utils.preg_quote(basename) + "(\\?[0-9a-z]+)?"))
           ) !== null || destContents.match(new RegExp(wrapFilenameRegexStr(nameToNameSearch[basename]))) !== null;
@@ -82,27 +82,27 @@ exports.hashAndSub = function(grunt, options) {
           if (matches) {
             fileDependencyGraph.setEdge(destNodeId, basename);
           }
-        });
-      });
+        }
+      }
 
       // dag stores nodes as "arbitrary ID" => [basenames]
       const dag = utils.mergeGraphCycles(fileDependencyGraph);
       const dagNodeHashesMap = {};
 
-      graphlib.alg.topsort(dag).reverse().forEach(function (dagNodeId) {
-        dag.successors(dagNodeId).forEach(function (succDagNodeId) {
+      for (const dagNodeId of graphlib.alg.topsort(dag).reverse()) {
+        for (const succDagNodeId of dag.successors(dagNodeId)) {
           const succRenamedMap = {};
 
-          dag.node(succDagNodeId).forEach(function (srcBasename) {
+          for (const srcBasename of dag.node(succDagNodeId)) {
             const lastIndex = srcBasename.lastIndexOf('.');
             succRenamedMap[srcBasename] = formatter({
               hash: dagNodeHashesMap[succDagNodeId],
               name: srcBasename.slice(0, lastIndex),
               ext : srcBasename.slice(lastIndex + 1, srcBasename.length)
             });
-          });
+          }
 
-          dag.node(dagNodeId).forEach(function (dstBasename) {
+          for (const dstBasename of dag.node(dagNodeId)) {
             for (const dstFile of fileDependencyGraph.node(dstBasename)) {
               let destContents = fs.readFileSync(dstFile, encoding);
 
@@ -122,21 +122,21 @@ exports.hashAndSub = function(grunt, options) {
               }
               fs.writeFileSync(dstFile, destContents, encoding);
             }
-          });
-        });
+          }
+        }
 
         const subhashes = [];
 
-        dag.node(dagNodeId).forEach(function (srcBasename) {
+        for (const srcBasename of dag.node(dagNodeId)) {
           for (const srcRealpath of fileDependencyGraph.node(srcBasename)) {
             subhashes.push(utils.md5File(srcRealpath));
           }
-        });
+        }
 
         const md5 = dagNodeHashesMap[dagNodeId] =
           (subhashes.length === 1 ? subhashes[0] : utils.md5String(subhashes.join(''))).slice(0, 8);
 
-        dag.node(dagNodeId).forEach(function (srcBasename) {
+        for (const srcBasename of dag.node(dagNodeId)) {
           // This file is only in dest, not in source.
           if (typeof fileDependencyGraph.node(srcBasename) === 'undefined') {
             return;
@@ -155,8 +155,8 @@ exports.hashAndSub = function(grunt, options) {
             }
             grunt.log.write(srcRealpath + ' ').ok(renamed);
           }
-        });
-      });
-    });
+        }
+      }
+    }
   }
 };
