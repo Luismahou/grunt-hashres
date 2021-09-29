@@ -1,13 +1,21 @@
-# DEPRECATION NOTICE
-This project is not maintained anymore. I moved to webpack, and you should too. :smile:
-
-#### grunt-hashres has been updated to Grunt 0.4. if you're still using Grunt 0.3.x go to [old version documentation](https://github.com/Luismahou/grunt-hashres/blob/master/grunt-0.3-README.md)
-
 # grunt-hashres
 
-[![Build Status](https://api.travis-ci.org/Luismahou/grunt-hashres.png)](https://travis-ci.org/Luismahou/grunt-hashres)
-
 Hashes your js and css files and rename the ```<script>``` and ```<link>``` declarations that refer to them in your html/php/etc files.
+
+This is a fork of the [original package](https://github.com/Luismahou/grunt-hashres). It seems that the original
+functionality worked under the assumption that the source and destination files are distinct (e.g. you are hashing CSS/JS files and updating HTML files).
+However, we started using it as a way to forcibly reload files (e.g. JS) when they are updated or even if their dependencies
+are updated.
+
+To make that work we do roughly the following:
+
+- Construct the dependency graph.
+- Treat cyclical dependencies as a "single file" (i.e. all the files get one common hash based on all of their contents).
+- Update/rename the files in a reverse topological order (i.e. dependencies are updated before the files that depend on them).
+
+Additionally, we fixed an issue with the original version where if two files had the same base name, the later one's hash
+would be used in all the references. We fix that by giving all files with the same basename one common hash based on
+all of their contents.
 
 ## Getting Started
 Install this grunt plugin next to your project's [Gruntfile.js][getting_started] with: `npm install grunt-hashres`
